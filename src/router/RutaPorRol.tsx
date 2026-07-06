@@ -1,1 +1,1 @@
-// Componente de seguridad (HOC) para restringir accesos según los roles ADMIN, DOCENTE o ESTUDIANTE
+// Protege rutas por rol (ADMIN, DOCENTE, etc.)

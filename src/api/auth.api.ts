@@ -1,1 +1,1 @@
-// Endpoints de autenticación: login, logout y perfil actual
+// Funciones de login/logout
