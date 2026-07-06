@@ -32,7 +32,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             name={name}
             type={esPassword ? (mostrarPassword ? 'text' : 'password') : type}
             className={cn(
-              'w-full rounded-lg border border-slate-300 bg-white py-2.5 text-sm text-slate-900 outline-none transition focus:border-green-600 focus:ring-2 focus:ring-green-600/20',
+              'w-full rounded-lg border border-slate-300 bg-white py-2.5 text-sm text-slate-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20',
               icon ? 'pl-10' : 'pl-3',
               esPassword ? 'pr-10' : 'pr-3',
               error && 'border-red-400 focus:border-red-500 focus:ring-red-500/20',

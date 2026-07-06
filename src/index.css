@@ -1,1 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+/*
+ * Design tokens del proyecto (única fuente de verdad para colores y tipografía).
+ * Para cambiar la paleta o la fuente de toda la app, edita solo este bloque.
+ */
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Marca (verde institucional): botones primarios, enlaces activos, acentos */
+  --color-brand-50: #f0fdf4;
+  --color-brand-100: #dcfce7;
+  --color-brand-200: #bbf7d0;
+  --color-brand-600: #16a34a;
+  --color-brand-700: #15803d;
+  --color-brand-800: #166534;
+
+  /* Acento (dorado): detalles decorativos, subrayados, resaltados */
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+}
+
+body {
+  font-family: var(--font-sans);
+}

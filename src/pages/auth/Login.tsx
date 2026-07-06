@@ -55,7 +55,7 @@ export default function Login() {
       <header className="flex items-center justify-between border-b border-slate-200 px-6 py-3">
         <div className="flex items-center gap-2">
           <img src={logoIe} alt="Escudo IE Agrícola Fray Isidoro de Montclar" className="h-10 w-10 p-1 rounded-full" />
-          <span className="font-bold text-green-700">
+          <span className="font-bold text-brand-700">
             IE Agrícola Fray Isidoro de Montclar
           </span>
         </div>
@@ -75,13 +75,13 @@ export default function Login() {
           <div className="h-[38%] bg-[#dfeee4]" />
           <div className="h-[32%] bg-[#f5f0dd]" />
           <div className="h-[30%] bg-[#dde3ee]" />
-          <div className="absolute -left-16 top-16 h-56 w-56 rounded-full bg-amber-200/60 blur-3xl" />
+          <div className="absolute -left-16 top-16 h-56 w-56 rounded-full bg-accent-300/60 blur-3xl" />
           <div className="absolute -right-16 bottom-16 h-72 w-72 rounded-full bg-blue-200/50 blur-3xl" />
         </div>
 
-        <div className="w-full max-w-md rounded-2xl border-t-4 border-green-600 bg-white p-8 shadow-xl">
+        <div className="w-full max-w-md rounded-2xl border-t-4 border-brand-600 bg-white p-8 shadow-xl">
           <div className="flex flex-col items-center text-center">
-            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-white ring-4 ring-green-100">
+            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-white ring-4 ring-brand-100">
               <img
                 src={logoIe}
                 alt="Escudo IE Agrícola Fray Isidoro de Montclar"
@@ -92,7 +92,7 @@ export default function Login() {
             <p className="mt-1 text-sm text-slate-500">
               Plataforma de Gestión Académica
             </p>
-            <span className="mt-3 h-1 w-10 rounded-full bg-amber-400" />
+            <span className="mt-3 h-1 w-10 rounded-full bg-accent-400" />
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4" noValidate>
@@ -116,7 +116,7 @@ export default function Login() {
               <label className="flex items-center gap-2 text-slate-600">
                 <input
                   type="checkbox"
-                  className="h-4 w-4 rounded border-slate-300 text-green-600 focus:ring-green-600"
+                  className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-600"
                 />
                 Recordarme
               </label>
@@ -137,7 +137,7 @@ export default function Login() {
       <footer className="relative border-t border-slate-100 py-4 text-center text-xs text-slate-400">
         <p>© {new Date().getFullYear()} Institución Educativa Agrícola Fray Isidoro de Montclar.</p>
         <p>Descanse - Cauca, Colombia</p>
-        <span className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-green-600 via-amber-400 to-blue-400" />
+        <span className="absolute inset-x-0 bottom-0 h-1 bg-linear-to-r from-brand-600 via-accent-400 to-blue-400" />
       </footer>
     </div>
   )
