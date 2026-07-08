@@ -9,6 +9,7 @@ import AdminEstudiantes from '@/pages/admin/Estudiantes'
 import EstudianteFormulario from '@/pages/admin/EstudianteFormulario'
 import AdminMaterias from '@/pages/admin/Materias'
 import AdminCursos from '@/pages/admin/Cursos'
+import AdminMatricula from '@/pages/admin/Matricula'
 import AdminConfiguracion from '@/pages/admin/Configuracion'
 import DocenteDashboard from '@/pages/docente/Dashboard'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
@@ -41,6 +42,7 @@ export const router = createBrowserRouter([
                   { path: '/admin/estudiantes/:id/editar', element: <EstudianteFormulario /> },
                   { path: '/admin/materias', element: <AdminMaterias /> },
                   { path: '/admin/cursos', element: <AdminCursos /> },
+                  { path: '/admin/matricula', element: <AdminMatricula /> },
                   { path: '/admin/configuracion', element: <AdminConfiguracion /> },
                 ],
               },
