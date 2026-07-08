@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Check, GraduationCap, Pencil, Plus, Trash2, X } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Check, GraduationCap, Pencil, Plus, Trash2, User, Users, X } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -9,11 +10,19 @@ import { DialogoConfirmacion } from '@/components/ui/DialogoConfirmacion'
 import { actualizarGrado, crearGrado, eliminarGrado, listarGrados } from '@/api/academico.api'
 import { listarDocentes } from '@/api/docentes.api'
 import { extraerMensajeError } from '@/api/axios'
-import { nombreCompleto } from '@/lib/utils'
+import { cn, nombreCompleto } from '@/lib/utils'
 import type { Grado } from '@/types/academico.types'
 import type { Docente } from '@/types/docente.types'
 
+const BARRAS_COLOR = ['bg-brand-500', 'bg-blue-500', 'bg-amber-400', 'bg-purple-500', 'bg-pink-500', 'bg-cyan-500']
+
+function colorPorNombre(nombre: string) {
+  const hash = [...nombre].reduce((acumulado, caracter) => acumulado + caracter.charCodeAt(0), 0)
+  return BARRAS_COLOR[hash % BARRAS_COLOR.length]
+}
+
 export default function Cursos() {
+  const navigate = useNavigate()
   const [grados, setGrados] = useState<Grado[] | null>(null)
   const [docentes, setDocentes] = useState<Docente[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -146,8 +155,8 @@ export default function Cursos() {
       <main className="flex-1 p-8">
         <h2 className="text-2xl font-bold text-slate-900">Gestionar Cursos</h2>
         <p className="mt-1 text-sm text-slate-500">
-          Administra los grados del sistema y su director de grupo. La matrícula de estudiantes se
-          gestiona por separado.
+          Administra los grados del sistema y su director de grupo. Ingresa al detalle de un curso para
+          gestionar sus estudiantes matriculados y las materias asignadas.
         </p>
 
         <form
@@ -186,105 +195,129 @@ export default function Cursos() {
           {errorCreacion && <p className="mt-3 text-sm text-red-500">{errorCreacion}</p>}
         </form>
 
-        <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="mt-6">
           {error ? (
-            <p className="p-8 text-center text-sm text-red-500">{error}</p>
+            <p className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-red-500">
+              {error}
+            </p>
           ) : !grados ? (
-            <div className="flex justify-center py-16">
+            <div className="flex justify-center rounded-xl border border-slate-200 bg-white py-16">
               <Spinner />
             </div>
           ) : grados.length === 0 ? (
-            <p className="p-8 text-center text-sm text-slate-400">No hay cursos registrados.</p>
+            <p className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-400">
+              No hay cursos registrados.
+            </p>
           ) : (
-            <ul>
-              {grados.map((grado) => (
-                <li
-                  key={grado.id}
-                  className="flex items-center justify-between gap-4 border-b border-slate-100 px-6 py-3 last:border-0"
-                >
-                  {editandoId === grado.id ? (
-                    <div className="flex flex-1 items-center gap-3">
-                      <input
-                        autoFocus
-                        value={nombreEditado}
-                        onChange={(evento) => setNombreEditado(evento.target.value)}
-                        onKeyDown={(evento) => {
-                          if (evento.key === 'Escape') cancelarEdicion()
-                        }}
-                        className="flex-1 rounded-lg border border-brand-300 px-3 py-1.5 text-sm text-slate-900 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20"
-                      />
-                      <select
-                        value={directorEditado}
-                        onChange={(evento) => setDirectorEditado(evento.target.value)}
-                        className="flex-1 rounded-lg border border-brand-300 px-3 py-1.5 text-sm text-slate-900 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20"
-                      >
-                        <option value="">Director de grupo...</option>
-                        {docentes.map((docente) => (
-                          <option key={docente.id} value={docente.id}>
-                            {nombreCompleto(docente)}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <GraduationCap size={16} className="text-slate-400" />
-                      <p className="text-sm font-medium text-slate-900">{grado.nombre}</p>
-                      <span className="text-sm text-slate-400">
-                        — {nombreDirector(grado.directorId) ? nombreCompleto(nombreDirector(grado.directorId)!) : 'Sin director asignado'}
-                      </span>
-                    </div>
-                  )}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {grados.map((grado) => {
+                const estaEditando = editandoId === grado.id
 
-                  <div className="flex shrink-0 items-center gap-3">
-                    {editandoId === grado.id ? (
-                      <>
-                        <button
-                          type="button"
-                          aria-label="Guardar"
-                          onClick={guardarEdicion}
-                          disabled={guardandoEdicion}
-                          className="cursor-pointer text-brand-600 hover:text-brand-700 disabled:opacity-50"
-                        >
-                          <Check size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          aria-label="Cancelar edición"
-                          onClick={cancelarEdicion}
-                          className="cursor-pointer text-slate-400 hover:text-slate-600"
-                        >
-                          <X size={16} />
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          aria-label={`Editar ${grado.nombre}`}
-                          onClick={() => iniciarEdicion(grado)}
-                          className="cursor-pointer text-blue-600 hover:text-blue-700"
-                        >
-                          <Pencil size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          aria-label={`Eliminar ${grado.nombre}`}
-                          onClick={() => setGradoAEliminar(grado)}
-                          className="cursor-pointer text-red-500 hover:text-red-600"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </>
-                    )}
+                return (
+                  <div
+                    key={grado.id}
+                    className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+                  >
+                    <div className={cn('h-1.5', colorPorNombre(grado.nombre))} />
+                    <div className="p-5">
+                      {estaEditando ? (
+                        <div className="flex flex-col gap-3">
+                          <input
+                            autoFocus
+                            value={nombreEditado}
+                            onChange={(evento) => setNombreEditado(evento.target.value)}
+                            onKeyDown={(evento) => {
+                              if (evento.key === 'Escape') cancelarEdicion()
+                            }}
+                            className="w-full rounded-lg border border-brand-300 px-3 py-1.5 text-sm text-slate-900 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20"
+                          />
+                          <select
+                            value={directorEditado}
+                            onChange={(evento) => setDirectorEditado(evento.target.value)}
+                            className="w-full rounded-lg border border-brand-300 px-3 py-1.5 text-sm text-slate-900 outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20"
+                          >
+                            <option value="">Director de grupo...</option>
+                            {docentes.map((docente) => (
+                              <option key={docente.id} value={docente.id}>
+                                {nombreCompleto(docente)}
+                              </option>
+                            ))}
+                          </select>
+                          {errorEdicion && <p className="text-xs text-red-500">{errorEdicion}</p>}
+                          <div className="flex gap-2">
+                            <button
+                              type="button"
+                              aria-label="Guardar"
+                              onClick={guardarEdicion}
+                              disabled={guardandoEdicion}
+                              className="cursor-pointer text-brand-600 hover:text-brand-700 disabled:opacity-50"
+                            >
+                              <Check size={18} />
+                            </button>
+                            <button
+                              type="button"
+                              aria-label="Cancelar edición"
+                              onClick={cancelarEdicion}
+                              className="cursor-pointer text-slate-400 hover:text-slate-600"
+                            >
+                              <X size={18} />
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-2">
+                            <GraduationCap size={18} className="text-slate-400" />
+                            <h3 className="text-lg font-bold text-slate-900">{grado.nombre}</h3>
+                          </div>
+                          <div className="mt-3 flex items-center gap-2 text-sm text-slate-500">
+                            <User size={14} className="shrink-0" />
+                            <span>
+                              Director:{' '}
+                              <span className="font-medium text-slate-700">
+                                {nombreDirector(grado.directorId)
+                                  ? nombreCompleto(nombreDirector(grado.directorId)!)
+                                  : 'Sin director asignado'}
+                              </span>
+                            </span>
+                          </div>
+                          <div className="mt-1 flex items-center gap-2 text-sm text-slate-400">
+                            <Users size={14} className="shrink-0" />
+                            <span>
+                              Estudiantes: <span className="italic">en desarrollo</span>
+                            </span>
+                          </div>
+
+                          <div className="mt-4 flex items-center gap-3">
+                            <button
+                              type="button"
+                              aria-label={`Editar ${grado.nombre}`}
+                              onClick={() => iniciarEdicion(grado)}
+                              className="cursor-pointer text-blue-600 hover:text-blue-700"
+                            >
+                              <Pencil size={16} />
+                            </button>
+                            <button
+                              type="button"
+                              aria-label={`Eliminar ${grado.nombre}`}
+                              onClick={() => setGradoAEliminar(grado)}
+                              className="cursor-pointer text-red-500 hover:text-red-600"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                            <div className="flex-1">
+                              <Button onClick={() => navigate(`/admin/cursos/${grado.id}`)}>Administrar</Button>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                )
+              })}
+            </div>
           )}
         </div>
-
-        {editandoId !== null && errorEdicion && <p className="mt-2 text-sm text-red-500">{errorEdicion}</p>}
 
         <div className="mt-8 grid max-w-2xl grid-cols-2 gap-4">
           <TarjetaResumen

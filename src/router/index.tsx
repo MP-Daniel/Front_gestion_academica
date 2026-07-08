@@ -7,9 +7,10 @@ import AdminDocentes from '@/pages/admin/Docentes'
 import DocenteFormulario from '@/pages/admin/DocenteFormulario'
 import AdminEstudiantes from '@/pages/admin/Estudiantes'
 import EstudianteFormulario from '@/pages/admin/EstudianteFormulario'
+import EstudiantePerfil from '@/pages/admin/EstudiantePerfil'
 import AdminMaterias from '@/pages/admin/Materias'
 import AdminCursos from '@/pages/admin/Cursos'
-import AdminMatricula from '@/pages/admin/Matricula'
+import CursoDetalle from '@/pages/admin/CursoDetalle'
 import AdminConfiguracion from '@/pages/admin/Configuracion'
 import DocenteDashboard from '@/pages/docente/Dashboard'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
@@ -40,9 +41,10 @@ export const router = createBrowserRouter([
                   { path: '/admin/estudiantes', element: <AdminEstudiantes /> },
                   { path: '/admin/estudiantes/nuevo', element: <EstudianteFormulario /> },
                   { path: '/admin/estudiantes/:id/editar', element: <EstudianteFormulario /> },
+                  { path: '/admin/estudiantes/:id/perfil', element: <EstudiantePerfil /> },
                   { path: '/admin/materias', element: <AdminMaterias /> },
                   { path: '/admin/cursos', element: <AdminCursos /> },
-                  { path: '/admin/matricula', element: <AdminMatricula /> },
+                  { path: '/admin/cursos/:id', element: <CursoDetalle /> },
                   { path: '/admin/configuracion', element: <AdminConfiguracion /> },
                 ],
               },
