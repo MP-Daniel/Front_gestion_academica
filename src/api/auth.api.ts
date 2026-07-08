@@ -1,34 +1,33 @@
-import type { Credenciales, SesionAuth, Usuario } from '@/types/auth.types'
+import { api } from './axios'
+import type { Credenciales, Rol, SesionAuth, Usuario } from '@/types/auth.types'
 
-// Mock temporal en memoria mientras se conecta la API real de autenticación.
-const USUARIOS_MOCK: Array<Usuario & { contrasena: string }> = [
-  { id: '1', nombre: 'Ana Administradora', usuario: 'admin', contrasena: 'admin123', rol: 'ADMIN' },
-  { id: '2', nombre: 'Carlos Docente', usuario: 'docente', contrasena: 'docente123', rol: 'DOCENTE' },
-  { id: '3', nombre: 'Sofía Estudiante', usuario: 'estudiante', contrasena: 'estudiante123', rol: 'ESTUDIANTE' },
-]
+// Forma cruda que devuelve el backend (ver esquema RespuestaAuth en Swagger): plana,
+// sin separar token y datos del usuario. Se normaliza abajo a SesionAuth.
+interface RespuestaLoginApi {
+  token: string
+  documento: string
+  email: string
+  primerNombre: string
+  segundoNombre: string | null
+  primerApellido: string
+  segundoApellido: string | null
+  rol: Rol
+}
 
-export async function login({ usuario, contrasena }: Credenciales): Promise<SesionAuth> {
-  await new Promise((resolve) => setTimeout(resolve, 500))
+export async function login(credenciales: Credenciales): Promise<SesionAuth> {
+  const respuesta = await api.post<RespuestaLoginApi>('/auth/login', credenciales)
 
-  const encontrado = USUARIOS_MOCK.find(
-    (u) => u.usuario === usuario && u.contrasena === contrasena,
-  )
-
-  if (!encontrado) {
-    throw new Error('Usuario o contraseña incorrectos')
+  const usuario: Usuario = {
+    documento: respuesta.documento,
+    email: respuesta.email,
+    primerNombre: respuesta.primerNombre,
+    segundoNombre: respuesta.segundoNombre,
+    primerApellido: respuesta.primerApellido,
+    segundoApellido: respuesta.segundoApellido,
+    rol: respuesta.rol,
   }
 
-  const usuarioAutenticado: Usuario = {
-    id: encontrado.id,
-    nombre: encontrado.nombre,
-    usuario: encontrado.usuario,
-    rol: encontrado.rol,
-  }
-
-  return {
-    token: `mock-token-${encontrado.id}`,
-    usuario: usuarioAutenticado,
-  }
+  return { token: respuesta.token, usuario }
 }
 
 export async function logout(): Promise<void> {

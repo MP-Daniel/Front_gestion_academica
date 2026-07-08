@@ -1,5 +1,6 @@
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/Button'
+import { nombreCompleto } from '@/lib/utils'
 
 export default function Dashboard() {
   const { usuario, cerrarSesion } = useAuth()
@@ -7,7 +8,7 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-white">
       <h1 className="text-2xl font-bold text-slate-900">Panel de Estudiante</h1>
-      <p className="text-slate-500">Bienvenido, {usuario?.nombre}</p>
+      <p className="text-slate-500">Bienvenido, {usuario && nombreCompleto(usuario)}</p>
       <div className="w-40">
         <Button variant="secondary" onClick={cerrarSesion}>
           Cerrar sesión

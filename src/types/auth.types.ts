@@ -1,14 +1,17 @@
 export type Rol = 'ADMIN' | 'DOCENTE' | 'ESTUDIANTE'
 
 export interface Usuario {
-  id: string
-  nombre: string
-  usuario: string
+  documento: string
+  email: string
+  primerNombre: string
+  segundoNombre: string | null
+  primerApellido: string
+  segundoApellido: string | null
   rol: Rol
 }
 
 export interface Credenciales {
-  usuario: string
+  documento: string
   contrasena: string
 }
 
