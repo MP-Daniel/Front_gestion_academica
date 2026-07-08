@@ -5,6 +5,7 @@ interface DialogoConfirmacionProps {
   abierto: boolean
   titulo: string
   mensaje: string
+  error?: string
   procesando?: boolean
   textoConfirmar?: string
   onConfirmar: () => void
@@ -15,6 +16,7 @@ export function DialogoConfirmacion({
   abierto,
   titulo,
   mensaje,
+  error,
   procesando = false,
   textoConfirmar = 'Confirmar',
   onConfirmar,
@@ -32,6 +34,9 @@ export function DialogoConfirmacion({
           <h2 className="text-lg font-bold text-slate-900">{titulo}</h2>
         </div>
         <p className="mt-3 text-sm text-slate-500">{mensaje}</p>
+        {error && (
+          <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>
+        )}
         <div className="mt-6 flex justify-end gap-3">
           <div>
             <Button type="button" variant="secondary" onClick={onCancelar} disabled={procesando}>

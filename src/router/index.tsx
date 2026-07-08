@@ -6,6 +6,7 @@ import AdminDashboard from '@/pages/admin/Dashboard'
 import AdminDocentes from '@/pages/admin/Docentes'
 import DocenteFormulario from '@/pages/admin/DocenteFormulario'
 import AdminMaterias from '@/pages/admin/Materias'
+import AdminCursos from '@/pages/admin/Cursos'
 import AdminConfiguracion from '@/pages/admin/Configuracion'
 import DocenteDashboard from '@/pages/docente/Dashboard'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
@@ -34,6 +35,7 @@ export const router = createBrowserRouter([
                   { path: '/admin/docentes/nuevo', element: <DocenteFormulario /> },
                   { path: '/admin/docentes/:id/editar', element: <DocenteFormulario /> },
                   { path: '/admin/materias', element: <AdminMaterias /> },
+                  { path: '/admin/cursos', element: <AdminCursos /> },
                   { path: '/admin/configuracion', element: <AdminConfiguracion /> },
                 ],
               },
