@@ -26,6 +26,7 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
   ADMIN: [
     { etiqueta: 'Dashboard', ruta: '/admin', icono: LayoutDashboard },
     { etiqueta: 'Docentes', ruta: '/admin/docentes', icono: Users },
+    { etiqueta: 'Estudiantes', ruta: '/admin/estudiantes', icono: GraduationCap },
     { etiqueta: 'Cursos', ruta: '/admin/cursos', icono: BookOpen },
     { etiqueta: 'Materias', ruta: '/admin/materias', icono: BookMarked },
     { etiqueta: 'Matrícula', ruta: '/admin/matricula', icono: ClipboardList },
