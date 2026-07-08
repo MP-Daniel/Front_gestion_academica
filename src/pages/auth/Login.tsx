@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { useAuthStore } from '@/store/auth.store'
 import { login as loginApi } from '@/api/auth.api'
+import { extraerMensajeError } from '@/api/axios'
 import type { Rol } from '@/types/auth.types'
 
 const RUTAS_POR_ROL: Record<Rol, string> = {
@@ -18,7 +19,7 @@ const RUTAS_POR_ROL: Record<Rol, string> = {
 }
 
 const loginSchema = z.object({
-  usuario: z.string().min(1, 'Ingresa tu ID de estudiante o docente'),
+  documento: z.string().min(1, 'Ingresa tu número de documento'),
   contrasena: z.string().min(1, 'Ingresa tu contraseña'),
 })
 
@@ -44,7 +45,7 @@ export default function Login() {
       setSesion(sesion.token, sesion.usuario)
       navigate(RUTAS_POR_ROL[sesion.usuario.rol])
     } catch (error) {
-      setErrorLogin(error instanceof Error ? error.message : 'No se pudo iniciar sesión')
+      setErrorLogin(extraerMensajeError(error))
     } finally {
       setEnviando(false)
     }
@@ -63,7 +64,7 @@ export default function Login() {
           <button
             type="button"
             aria-label="Ayuda"
-            className="rounded-full p-1.5 hover:bg-slate-100"
+            className="cursor-pointer rounded-full p-1.5 hover:bg-slate-100"
           >
             <HelpCircle size={20} />
           </button>
@@ -97,11 +98,11 @@ export default function Login() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4" noValidate>
             <Input
-              label="Usuario"
-              placeholder="Identificación de estudiante o docente"
+              label="Documento"
+              placeholder="Número de documento"
               icon={<User size={18} />}
-              error={errors.usuario?.message}
-              {...register('usuario')}
+              error={errors.documento?.message}
+              {...register('documento')}
             />
             <Input
               label="Contraseña"

@@ -33,6 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             type={esPassword ? (mostrarPassword ? 'text' : 'password') : type}
             className={cn(
               'w-full rounded-lg border border-slate-300 bg-white py-2.5 text-sm text-slate-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20',
+              'disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400',
               icon ? 'pl-10' : 'pl-3',
               esPassword ? 'pr-10' : 'pr-3',
               error && 'border-red-400 focus:border-red-500 focus:ring-red-500/20',
@@ -45,7 +46,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               type="button"
               tabIndex={-1}
               onClick={() => setMostrarPassword((v) => !v)}
-              className="absolute right-3 text-slate-400 hover:text-slate-600"
+              className="absolute right-3 cursor-pointer text-slate-400 hover:text-slate-600"
             >
               {mostrarPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>

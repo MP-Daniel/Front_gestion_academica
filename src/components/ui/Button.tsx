@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'peligro'
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -14,11 +14,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          'inline-flex w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-70',
+          'inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-70',
           variant === 'primary' &&
-            'bg-brand-700 text-white hover:bg-brand-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-700',
+            'bg-brand-700 text-white hover:bg-brand-800 focus-visible:outline-2 focus-visible:outline-brand-700',
           variant === 'secondary' &&
             'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50',
+          variant === 'peligro' &&
+            'bg-red-600 text-white hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-red-600',
           className,
         )}
         {...props}
