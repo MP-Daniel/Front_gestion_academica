@@ -9,7 +9,6 @@ export default function Dashboard() {
       <Navbar
         titulo="Panel de Control"
         subtitulo="Institución Educativa Agrícola Fray Isidoro"
-        anioActivo={2027}
         sistemaEnLinea
       />
 

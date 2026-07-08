@@ -105,7 +105,7 @@ export default function Materias() {
 
   return (
     <>
-      <Navbar titulo="Materias" subtitulo="Catálogo académico de asignaturas" anioActivo={2027} />
+      <Navbar titulo="Materias" subtitulo="Catálogo académico de asignaturas" />
 
       <main className="flex-1 p-8">
         <h2 className="text-2xl font-bold text-slate-900">Gestionar Materias</h2>

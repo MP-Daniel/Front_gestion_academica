@@ -75,7 +75,7 @@ export default function Docentes() {
 
   return (
     <>
-      <Navbar titulo="Gestión de Docentes" anioActivo={2026} />
+      <Navbar titulo="Gestión de Docentes" />
 
       <main className="flex-1 p-8">
         <div className="flex items-start gap-4">

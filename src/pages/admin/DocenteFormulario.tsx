@@ -158,7 +158,6 @@ export default function DocenteFormulario() {
       <Navbar
         titulo="Gestión de Docentes"
         subtitulo={esEdicion ? 'Docentes › Editar docente' : 'Docentes › Agregar docente'}
-        anioActivo={2027}
       />
 
       <main className="flex-1 p-8">
