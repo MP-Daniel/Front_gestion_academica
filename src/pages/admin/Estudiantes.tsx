@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircle2, GraduationCap, Pencil, Search, Trash2, UserPlus } from 'lucide-react'
+import { CheckCircle2, Eye, GraduationCap, Pencil, Search, Trash2, UserPlus } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -131,6 +131,14 @@ export default function Estudiantes() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex justify-end gap-3">
+                          <button
+                            type="button"
+                            aria-label={`Ver perfil de ${nombre}`}
+                            onClick={() => navigate(`/admin/estudiantes/${estudiante.id}/perfil`)}
+                            className="cursor-pointer text-slate-500 hover:text-slate-700"
+                          >
+                            <Eye size={16} />
+                          </button>
                           <button
                             type="button"
                             aria-label={`Editar ${nombre}`}
