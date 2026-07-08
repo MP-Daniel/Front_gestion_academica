@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   BarChart3,
+  BookMarked,
   BookOpen,
   ClipboardList,
   GraduationCap,
@@ -26,6 +27,7 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
     { etiqueta: 'Dashboard', ruta: '/admin', icono: LayoutDashboard },
     { etiqueta: 'Docentes', ruta: '/admin/docentes', icono: Users },
     { etiqueta: 'Cursos', ruta: '/admin/cursos', icono: BookOpen },
+    { etiqueta: 'Materias', ruta: '/admin/materias', icono: BookMarked },
     { etiqueta: 'Matrícula', ruta: '/admin/matricula', icono: ClipboardList },
     { etiqueta: 'Reportes', ruta: '/admin/reportes', icono: BarChart3 },
     { etiqueta: 'Configuración', ruta: '/admin/configuracion', icono: Settings },

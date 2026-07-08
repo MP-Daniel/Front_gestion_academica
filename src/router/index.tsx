@@ -5,6 +5,7 @@ import NoEncontrado from '@/pages/NoEncontrado'
 import AdminDashboard from '@/pages/admin/Dashboard'
 import AdminDocentes from '@/pages/admin/Docentes'
 import DocenteFormulario from '@/pages/admin/DocenteFormulario'
+import AdminMaterias from '@/pages/admin/Materias'
 import DocenteDashboard from '@/pages/docente/Dashboard'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
 import { RutaPrivada } from './RutaPrivada'
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
                   { path: '/admin/docentes', element: <AdminDocentes /> },
                   { path: '/admin/docentes/nuevo', element: <DocenteFormulario /> },
                   { path: '/admin/docentes/:id/editar', element: <DocenteFormulario /> },
+                  { path: '/admin/materias', element: <AdminMaterias /> },
                 ],
               },
             ],
