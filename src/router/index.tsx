@@ -1,30 +1,49 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Login from '@/pages/auth/Login'
 import NoAutorizado from '@/pages/NoAutorizado'
+import NoEncontrado from '@/pages/NoEncontrado'
 import AdminDashboard from '@/pages/admin/Dashboard'
+import AdminDocentes from '@/pages/admin/Docentes'
+import DocenteFormulario from '@/pages/admin/DocenteFormulario'
 import DocenteDashboard from '@/pages/docente/Dashboard'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
 import { RutaPrivada } from './RutaPrivada'
 import { RutaPorRol } from './RutaPorRol'
+import { Layout } from '@/components/layout/Layout'
 
 export const router = createBrowserRouter([
-  { path: '/', element: <Navigate to="/login" replace /> },
-  { path: '/login', element: <Login /> },
-  { path: '/no-autorizado', element: <NoAutorizado /> },
   {
-    element: <RutaPrivada />,
+    errorElement: <NoEncontrado />,
     children: [
+      { path: '/', element: <Navigate to="/login" replace /> },
+      { path: '/login', element: <Login /> },
+      { path: '/no-autorizado', element: <NoAutorizado /> },
       {
-        element: <RutaPorRol rolesPermitidos={['ADMIN']} />,
-        children: [{ path: '/admin', element: <AdminDashboard /> }],
-      },
-      {
-        element: <RutaPorRol rolesPermitidos={['DOCENTE']} />,
-        children: [{ path: '/docente', element: <DocenteDashboard /> }],
-      },
-      {
-        element: <RutaPorRol rolesPermitidos={['ESTUDIANTE']} />,
-        children: [{ path: '/estudiante', element: <EstudianteDashboard /> }],
+        element: <RutaPrivada />,
+        children: [
+          {
+            element: <RutaPorRol rolesPermitidos={['ADMIN']} />,
+            children: [
+              {
+                element: <Layout />,
+                children: [
+                  { path: '/admin', element: <AdminDashboard /> },
+                  { path: '/admin/docentes', element: <AdminDocentes /> },
+                  { path: '/admin/docentes/nuevo', element: <DocenteFormulario /> },
+                  { path: '/admin/docentes/:id/editar', element: <DocenteFormulario /> },
+                ],
+              },
+            ],
+          },
+          {
+            element: <RutaPorRol rolesPermitidos={['DOCENTE']} />,
+            children: [{ path: '/docente', element: <DocenteDashboard /> }],
+          },
+          {
+            element: <RutaPorRol rolesPermitidos={['ESTUDIANTE']} />,
+            children: [{ path: '/estudiante', element: <EstudianteDashboard /> }],
+          },
+        ],
       },
     ],
   },
