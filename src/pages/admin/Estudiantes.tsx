@@ -97,6 +97,7 @@ export default function Estudiantes() {
                 <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wide text-slate-400">
                   <th className="px-6 py-3">Nombre completo</th>
                   <th className="px-6 py-3">Identificación</th>
+                  <th className="px-6 py-3">Curso</th>
                   <th className="px-6 py-3">Estado</th>
                   <th className="px-6 py-3 text-right">Acciones</th>
                 </tr>
@@ -115,6 +116,13 @@ export default function Estudiantes() {
                       </td>
                       <td className="px-6 py-4">
                         <p className="text-slate-700">CC {estudiante.documento}</p>
+                      </td>
+                      <td className="px-6 py-4">
+                        {estudiante.gradoActualNombre ? (
+                          <Badge color="blue">{estudiante.gradoActualNombre}</Badge>
+                        ) : (
+                          <p className="text-xs text-slate-400">Sin matricular</p>
+                        )}
                       </td>
                       <td className="px-6 py-4">
                         <Badge color={estudiante.activo ? 'brand' : 'red'}>

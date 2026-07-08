@@ -6,6 +6,8 @@ export interface Estudiante {
   primerApellido: string
   segundoApellido: string | null
   activo: boolean
+  gradoActualId: number | null
+  gradoActualNombre: string | null
 }
 
 export interface SolicitudCrearEstudiante {
