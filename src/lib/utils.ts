@@ -1,1 +1,24 @@
-// Utilidades globales y funciones helper (ej. optimización de clases con clsx)
+import { clsx, type ClassValue } from 'clsx'
+
+export function cn(...inputs: ClassValue[]) {
+  return clsx(inputs)
+}
+
+interface PersonaConNombre {
+  primerNombre: string
+  segundoNombre: string | null
+  primerApellido: string
+  segundoApellido: string | null
+}
+
+export function nombreCompleto(persona: PersonaConNombre): string {
+  return [persona.primerNombre, persona.segundoNombre, persona.primerApellido, persona.segundoApellido]
+    .filter(Boolean)
+    .join(' ')
+}
+
+export function urlBackend(ruta: string): string {
+  if (/^https?:\/\//.test(ruta)) return ruta
+  const base = (import.meta.env.VITE_BACKEND_API as string).replace(/\/api\/?$/, '')
+  return `${base}${ruta}`
+}

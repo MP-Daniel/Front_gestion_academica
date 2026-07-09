@@ -26,3 +26,7 @@ dist-ssr
 
 # NO subir varibles de entorno
 .env
+
+.claude
+CLAUDE.md
+docs
