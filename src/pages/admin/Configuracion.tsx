@@ -1,5 +1,5 @@
-import { useState, type FormEvent } from 'react'
-import { CalendarCheck, Plus } from 'lucide-react'
+import { useEffect, useState, type FormEvent } from 'react'
+import { CalendarCheck, Lock, Pencil, Plus, Unlock, X } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -7,9 +7,13 @@ import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { DialogoConfirmacion } from '@/components/ui/DialogoConfirmacion'
 import { crearAnioLectivo, activarAnioLectivo } from '@/api/aniosLectivos.api'
+import { cerrarPeriodo, crearPeriodo, listarPeriodos, actualizarPeriodo, reabrirPeriodo } from '@/api/periodos.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAnioLectivo } from '@/hooks/useAnioLectivo'
 import type { AnioLectivo } from '@/types/anioLectivo.types'
+import type { Periodo } from '@/types/periodo.types'
+
+const FORM_PERIODO_VACIO = { nombre: '', porcentaje: '', fechaInicio: '', fechaFin: '' }
 
 export default function Configuracion() {
   const { anios, anioActivo, cargando, cargarAnios, seleccionarAnio } = useAnioLectivo()
@@ -22,6 +26,39 @@ export default function Configuracion() {
   const [anioAActivar, setAnioAActivar] = useState<AnioLectivo | null>(null)
   const [activando, setActivando] = useState(false)
   const [errorActivar, setErrorActivar] = useState<string | null>(null)
+
+  // Modal de periodos académicos
+  const [anioPeriodos, setAnioPeriodos] = useState<AnioLectivo | null>(null)
+  const [periodos, setPeriodos] = useState<Periodo[] | null>(null)
+  const [errorPeriodos, setErrorPeriodos] = useState<string | null>(null)
+  const [recargaPeriodos, setRecargaPeriodos] = useState(0)
+
+  const [periodoEditando, setPeriodoEditando] = useState<Periodo | 'nuevo' | null>(null)
+  const [formPeriodo, setFormPeriodo] = useState(FORM_PERIODO_VACIO)
+  const [guardandoPeriodo, setGuardandoPeriodo] = useState(false)
+  const [errorGuardarPeriodo, setErrorGuardarPeriodo] = useState<string | null>(null)
+
+  const [cambiandoEstadoId, setCambiandoEstadoId] = useState<number | null>(null)
+  const [errorCambiarEstado, setErrorCambiarEstado] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!anioPeriodos) return
+    let vigente = true
+    setErrorPeriodos(null)
+    setPeriodos(null)
+
+    listarPeriodos(anioPeriodos.id)
+      .then((datos) => {
+        if (vigente) setPeriodos(datos)
+      })
+      .catch((error: unknown) => {
+        if (vigente) setErrorPeriodos(extraerMensajeError(error))
+      })
+
+    return () => {
+      vigente = false
+    }
+  }, [anioPeriodos, recargaPeriodos])
 
   const manejarCrear = async (evento: FormEvent) => {
     evento.preventDefault()
@@ -59,6 +96,84 @@ export default function Configuracion() {
       setErrorActivar(extraerMensajeError(error))
     } finally {
       setActivando(false)
+    }
+  }
+
+  const anioPeriodosEsActivo = anioPeriodos && anioActivo && anioPeriodos.id === anioActivo.id
+
+  const iniciarCreacionPeriodo = () => {
+    setFormPeriodo(FORM_PERIODO_VACIO)
+    setErrorGuardarPeriodo(null)
+    setPeriodoEditando('nuevo')
+  }
+
+  const iniciarEdicionPeriodo = (periodo: Periodo) => {
+    setFormPeriodo({
+      nombre: periodo.nombre,
+      porcentaje: String(periodo.porcentaje),
+      fechaInicio: periodo.fechaInicio,
+      fechaFin: periodo.fechaFin,
+    })
+    setErrorGuardarPeriodo(null)
+    setPeriodoEditando(periodo)
+  }
+
+  const manejarGuardarPeriodo = async (evento: FormEvent) => {
+    evento.preventDefault()
+    if (!anioPeriodos || !periodoEditando) return
+
+    const porcentajeNumerico = Number(formPeriodo.porcentaje)
+    if (!formPeriodo.nombre.trim()) {
+      setErrorGuardarPeriodo('El nombre del periodo es obligatorio.')
+      return
+    }
+    if (!porcentajeNumerico || porcentajeNumerico <= 0 || porcentajeNumerico > 100) {
+      setErrorGuardarPeriodo('El porcentaje debe estar entre 0.1 y 100.')
+      return
+    }
+    if (!formPeriodo.fechaInicio || !formPeriodo.fechaFin) {
+      setErrorGuardarPeriodo('Las fechas de inicio y fin son obligatorias.')
+      return
+    }
+
+    setGuardandoPeriodo(true)
+    setErrorGuardarPeriodo(null)
+    try {
+      const datos = {
+        nombre: formPeriodo.nombre.trim(),
+        porcentaje: porcentajeNumerico,
+        fechaInicio: formPeriodo.fechaInicio,
+        fechaFin: formPeriodo.fechaFin,
+        anioLectivoId: anioPeriodos.id,
+      }
+      if (periodoEditando === 'nuevo') {
+        await crearPeriodo(datos)
+      } else {
+        await actualizarPeriodo(periodoEditando.id, datos)
+      }
+      setPeriodoEditando(null)
+      setRecargaPeriodos((valor) => valor + 1)
+    } catch (error) {
+      setErrorGuardarPeriodo(extraerMensajeError(error))
+    } finally {
+      setGuardandoPeriodo(false)
+    }
+  }
+
+  const alternarCierrePeriodo = async (periodo: Periodo) => {
+    setCambiandoEstadoId(periodo.id)
+    setErrorCambiarEstado(null)
+    try {
+      if (periodo.cerradoParaDocentes) {
+        await reabrirPeriodo(periodo.id)
+      } else {
+        await cerrarPeriodo(periodo.id)
+      }
+      setRecargaPeriodos((valor) => valor + 1)
+    } catch (error) {
+      setErrorCambiarEstado(extraerMensajeError(error))
+    } finally {
+      setCambiandoEstadoId(null)
     }
   }
 
@@ -128,15 +243,24 @@ export default function Configuracion() {
                         {anio.activo ? 'Activo' : 'Inactivo'}
                       </Badge>
                     </div>
-                    {!anio.activo && (
+                    <div className="flex items-center gap-4">
                       <button
                         type="button"
-                        onClick={() => setAnioAActivar(anio)}
-                        className="cursor-pointer text-sm font-medium text-brand-700 hover:text-brand-800"
+                        onClick={() => setAnioPeriodos(anio)}
+                        className="cursor-pointer text-sm font-medium text-slate-600 hover:text-slate-800"
                       >
-                        Activar
+                        Gestionar periodos
                       </button>
-                    )}
+                      {!anio.activo && (
+                        <button
+                          type="button"
+                          onClick={() => setAnioAActivar(anio)}
+                          className="cursor-pointer text-sm font-medium text-brand-700 hover:text-brand-800"
+                        >
+                          Activar
+                        </button>
+                      )}
+                    </div>
                   </li>
                 ))}
             </ul>
@@ -164,6 +288,164 @@ export default function Configuracion() {
         onConfirmar={confirmarActivacion}
         onCancelar={() => setAnioAActivar(null)}
       />
+
+      {/* Modal: periodos académicos del año */}
+      {anioPeriodos && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
+          <div className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-slate-900">Periodos de {anioPeriodos.anio}</h2>
+              <button
+                type="button"
+                aria-label="Cerrar"
+                onClick={() => {
+                  setAnioPeriodos(null)
+                  setPeriodoEditando(null)
+                }}
+                className="cursor-pointer text-slate-400 hover:text-slate-600"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {!anioPeriodosEsActivo && (
+              <p className="mt-2 rounded-lg bg-accent-100 px-3 py-2 text-xs text-accent-700">
+                Solo se pueden crear o editar periodos del año lectivo activo. Este año es de solo consulta.
+              </p>
+            )}
+
+            {periodoEditando ? (
+              <form onSubmit={manejarGuardarPeriodo} className="mt-4 flex flex-col gap-4">
+                <Input
+                  label="Nombre del periodo"
+                  placeholder="Ej. Primer Periodo"
+                  value={formPeriodo.nombre}
+                  onChange={(evento) => setFormPeriodo((v) => ({ ...v, nombre: evento.target.value }))}
+                />
+                <Input
+                  label="Porcentaje (%)"
+                  type="number"
+                  step="0.1"
+                  min="0.1"
+                  max="100"
+                  placeholder="Ej. 25"
+                  value={formPeriodo.porcentaje}
+                  onChange={(evento) => setFormPeriodo((v) => ({ ...v, porcentaje: evento.target.value }))}
+                />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    label="Fecha de inicio"
+                    type="date"
+                    value={formPeriodo.fechaInicio}
+                    onChange={(evento) => setFormPeriodo((v) => ({ ...v, fechaInicio: evento.target.value }))}
+                  />
+                  <Input
+                    label="Fecha de fin"
+                    type="date"
+                    value={formPeriodo.fechaFin}
+                    onChange={(evento) => setFormPeriodo((v) => ({ ...v, fechaFin: evento.target.value }))}
+                  />
+                </div>
+
+                {errorGuardarPeriodo && <p className="text-sm text-red-500">{errorGuardarPeriodo}</p>}
+
+                <div className="mt-2 flex justify-end gap-3">
+                  <Button type="button" variant="secondary" onClick={() => setPeriodoEditando(null)}>
+                    Cancelar
+                  </Button>
+                  <Button type="submit" isLoading={guardandoPeriodo}>
+                    {periodoEditando === 'nuevo' ? 'Crear periodo' : 'Guardar cambios'}
+                  </Button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <div className="mt-4 flex justify-end">
+                  <Button
+                    type="button"
+                    onClick={iniciarCreacionPeriodo}
+                    disabled={!anioPeriodosEsActivo}
+                    title={!anioPeriodosEsActivo ? 'Solo el año activo puede tener nuevos periodos.' : undefined}
+                  >
+                    <Plus size={18} />
+                    Nuevo periodo
+                  </Button>
+                </div>
+
+                <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
+                  {errorPeriodos ? (
+                    <p className="p-6 text-center text-sm text-red-500">{errorPeriodos}</p>
+                  ) : !periodos ? (
+                    <div className="flex justify-center py-10">
+                      <Spinner />
+                    </div>
+                  ) : periodos.length === 0 ? (
+                    <p className="p-6 text-center text-sm text-slate-400">
+                      No hay periodos registrados para este año.
+                    </p>
+                  ) : (
+                    <table className="w-full text-left text-sm">
+                      <thead>
+                        <tr className="border-b border-slate-200 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                          <th className="px-4 py-2">Nombre</th>
+                          <th className="px-4 py-2">Fechas</th>
+                          <th className="px-4 py-2">%</th>
+                          <th className="px-4 py-2">Estado</th>
+                          <th className="px-4 py-2 text-right">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {periodos.map((periodo) => (
+                          <tr key={periodo.id}>
+                            <td className="px-4 py-3 font-medium text-slate-900">{periodo.nombre}</td>
+                            <td className="px-4 py-3 text-slate-600">
+                              {periodo.fechaInicio} — {periodo.fechaFin}
+                            </td>
+                            <td className="px-4 py-3 text-slate-600">{periodo.porcentaje}%</td>
+                            <td className="px-4 py-3">
+                              <Badge color={periodo.cerradoParaDocentes ? 'red' : 'brand'}>
+                                {periodo.cerradoParaDocentes ? 'Cerrado' : 'Abierto'}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="flex justify-end gap-3">
+                                <button
+                                  type="button"
+                                  aria-label={`Editar ${periodo.nombre}`}
+                                  disabled={!anioPeriodosEsActivo}
+                                  onClick={() => iniciarEdicionPeriodo(periodo)}
+                                  className="cursor-pointer text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:text-slate-300"
+                                >
+                                  <Pencil size={16} />
+                                </button>
+                                <button
+                                  type="button"
+                                  aria-label={
+                                    periodo.cerradoParaDocentes
+                                      ? `Reabrir ${periodo.nombre}`
+                                      : `Cerrar ${periodo.nombre}`
+                                  }
+                                  disabled={cambiandoEstadoId === periodo.id}
+                                  onClick={() => alternarCierrePeriodo(periodo)}
+                                  className="cursor-pointer text-slate-500 hover:text-slate-700 disabled:opacity-50"
+                                >
+                                  {periodo.cerradoParaDocentes ? <Unlock size={16} /> : <Lock size={16} />}
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+
+                {errorCambiarEstado && <p className="mt-2 text-sm text-red-500">{errorCambiarEstado}</p>}
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </>
   )
 }
