@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { obtenerEstudiante } from '@/api/estudiantes.api'
 import { obtenerDocente } from '@/api/docentes.api'
-import { listarGrados } from '@/api/academico.api'
+import { obtenerGrado } from '@/api/academico.api'
 import { listarCargasPorGrado } from '@/api/cargaAcademica.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAnioLectivo } from '@/hooks/useAnioLectivo'
@@ -55,11 +55,8 @@ export default function EstudiantePerfil() {
     setErrorCargas(null)
     setCargas(null)
 
-    listarGrados()
-      .then((grados) => {
-        const grado = grados.find((g) => g.id === estudiante.gradoActualId)
-        return grado?.directorId ? obtenerDocente(grado.directorId) : null
-      })
+    obtenerGrado(estudiante.gradoActualId)
+      .then((grado) => (grado.directorId ? obtenerDocente(grado.directorId) : null))
       .then((docente) => {
         if (vigente) setNombreDirector(docente ? nombreCompleto(docente) : null)
       })

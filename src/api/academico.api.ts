@@ -21,6 +21,10 @@ export async function listarGrados(): Promise<Grado[]> {
   return api.get<Grado[]>('/academico/grados')
 }
 
+export async function obtenerGrado(id: number): Promise<Grado> {
+  return api.get<Grado>(`/academico/grados/${id}`)
+}
+
 export async function crearGrado(datos: SolicitudGrado): Promise<Grado> {
   return api.post<Grado>('/academico/grados', datos)
 }

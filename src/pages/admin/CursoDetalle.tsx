@@ -1,9 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
   BookMarked,
   ClipboardList,
+  Eye,
   GraduationCap,
   History,
   Info,
@@ -23,7 +24,7 @@ import { Badge, type BadgeColor } from '@/components/ui/Badge'
 import { Spinner } from '@/components/ui/Spinner'
 import { TarjetaResumen } from '@/components/ui/TarjetaResumen'
 import { DialogoConfirmacion } from '@/components/ui/DialogoConfirmacion'
-import { actualizarGrado, listarAsignaturas, listarGrados } from '@/api/academico.api'
+import { actualizarGrado, listarAsignaturas, obtenerGrado } from '@/api/academico.api'
 import { listarDocentes } from '@/api/docentes.api'
 import {
   cambiarEstadoMatricula,
@@ -58,6 +59,7 @@ const TABS: { id: TabId; etiqueta: string; icono: typeof Info }[] = [
 ]
 
 export default function CursoDetalle() {
+  const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const gradoId = Number(id)
   const { anioSeleccionado, soloLectura } = useAnioLectivo()
@@ -124,13 +126,13 @@ export default function CursoDetalle() {
     let vigente = true
 
     Promise.all([
-      listarGrados(),
+      obtenerGrado(gradoId),
       listarDocentes({ tamanoPagina: 100, incluirInactivos: false }),
       listarAsignaturas(),
     ])
-      .then(([grados, paginaDocentes, datosAsignaturas]) => {
+      .then(([datosGrado, paginaDocentes, datosAsignaturas]) => {
         if (!vigente) return
-        setGrado(grados.find((g) => g.id === gradoId) ?? null)
+        setGrado(datosGrado)
         setDocentes(paginaDocentes.content)
         setAsignaturas(datosAsignaturas)
       })
@@ -494,6 +496,14 @@ export default function CursoDetalle() {
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex justify-end gap-3">
+                                <button
+                                  type="button"
+                                  aria-label={`Ver perfil de ${matricula.nombreCompletoEstudiante}`}
+                                  onClick={() => navigate(`/admin/estudiantes/${matricula.estudianteId}/perfil`)}
+                                  className="cursor-pointer text-slate-500 hover:text-slate-700"
+                                >
+                                  <Eye size={16} />
+                                </button>
                                 <button
                                   type="button"
                                   aria-label={`Ver historial de ${matricula.nombreCompletoEstudiante}`}
