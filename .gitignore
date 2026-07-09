@@ -30,3 +30,8 @@ dist-ssr
 .claude
 CLAUDE.md
 docs
+
+
+# No subir graphify
+
+graphify-out/
