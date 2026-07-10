@@ -1,3 +1,5 @@
+import type { EstadoMatricula } from './matricula.types'
+
 export interface Estudiante {
   id: number
   documento: string
@@ -8,6 +10,8 @@ export interface Estudiante {
   activo: boolean
   gradoActualId: number | null
   gradoActualNombre: string | null
+  ultimaMatriculaGrado: string | null
+  ultimaMatriculaEstado: EstadoMatricula | null
 }
 
 export interface SolicitudCrearEstudiante {
