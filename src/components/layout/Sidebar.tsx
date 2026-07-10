@@ -4,14 +4,12 @@ import {
   BookMarked,
   BookOpen,
   FileText,
-  FolderOpen,
   GraduationCap,
   HelpCircle,
   Home,
   LayoutDashboard,
   LogOut,
   Settings,
-  User,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -41,8 +39,6 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
   ESTUDIANTE: [
     { etiqueta: 'Inicio', ruta: '/estudiante', icono: Home },
     { etiqueta: 'Calificaciones', ruta: '/estudiante/calificaciones', icono: FileText },
-    { etiqueta: 'Documentos', ruta: '/estudiante/documentos', icono: FolderOpen },
-    { etiqueta: 'Mi Perfil', ruta: '/estudiante/perfil', icono: User },
   ],
 }
 
