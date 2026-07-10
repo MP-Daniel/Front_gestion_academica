@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { Search } from 'lucide-react'
 import { obtenerDashboardEstudiante } from '@/api/dashboard.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
 import { Spinner } from '@/components/ui/Spinner'
+import { Input } from '@/components/ui/Input'
 import { NavbarEstudiante } from '@/components/layout/NavbarEstudiante'
 import { BienvenidaBanner } from '@/components/estudiante/BienvenidaBanner'
 import { TarjetaGrado } from '@/components/estudiante/TarjetaGrado'
@@ -37,7 +39,11 @@ export default function Dashboard() {
 
   return (
     <>
-      <NavbarEstudiante usuario={usuario} gradoNombre={dashboard?.estudiante.gradoNombre} seccionActual="Inicio" />
+      <NavbarEstudiante usuario={usuario} gradoNombre={dashboard?.estudiante.gradoNombre} seccionActual="Inicio">
+        <div className="w-full max-w-sm">
+          <Input placeholder="Buscar..." icon={<Search size={16} />} />
+        </div>
+      </NavbarEstudiante>
 
       <main className="flex-1 p-8">
         {error ? (
