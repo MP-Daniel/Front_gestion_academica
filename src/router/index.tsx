@@ -15,6 +15,7 @@ import AdminConfiguracion from '@/pages/admin/Configuracion'
 import DocenteDashboard from '@/pages/docente/Dashboard'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
 import EstudianteCalificaciones from '@/pages/estudiante/Calificaciones'
+import EstudianteCalendario from '@/pages/estudiante/Calendario'
 import { RutaPrivada } from './RutaPrivada'
 import { RutaPorRol } from './RutaPorRol'
 import { Layout } from '@/components/layout/Layout'
@@ -63,6 +64,7 @@ export const router = createBrowserRouter([
                 children: [
                   { path: '/estudiante', element: <EstudianteDashboard /> },
                   { path: '/estudiante/calificaciones', element: <EstudianteCalificaciones /> },
+                  { path: '/estudiante/calendario', element: <EstudianteCalendario /> },
                 ],
               },
             ],
