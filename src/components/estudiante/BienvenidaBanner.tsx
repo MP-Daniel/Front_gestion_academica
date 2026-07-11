@@ -1,6 +1,3 @@
-import { ClipboardList } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
-
 interface BienvenidaBannerProps {
   nombre: string
   entregasPendientes: number
@@ -21,12 +18,6 @@ export function BienvenidaBanner({ nombre, entregasPendientes }: BienvenidaBanne
           </span>{' '}
           para esta semana y un evento institucional próximo.
         </p>
-        <div className="mt-6 w-fit">
-          <Button type="button">
-            <ClipboardList size={18} />
-            Ver mis tareas
-          </Button>
-        </div>
       </div>
     </div>
   )

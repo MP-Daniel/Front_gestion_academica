@@ -1,12 +1,7 @@
 import { Calendar } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { formatearFechaCorta } from '@/lib/utils'
 import type { EventoProximo } from '@/types/dashboardEstudiante.types'
-
-const MESES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC']
-
-function formatearFecha(fechaIso: string) {
-  const fecha = new Date(fechaIso)
-  return { dia: fecha.getDate(), mes: MESES[fecha.getMonth()] }
-}
 
 interface ProximosEventosProps {
   eventos: EventoProximo[]
@@ -23,7 +18,7 @@ export function ProximosEventos({ eventos }: ProximosEventosProps) {
       <ul className="mt-4 space-y-4">
         {eventos.length === 0 && <p className="text-sm text-slate-400">No tienes eventos próximos.</p>}
         {eventos.map((evento) => {
-          const { dia, mes } = formatearFecha(evento.fecha)
+          const { dia, mes } = formatearFechaCorta(evento.fecha)
           return (
             <li key={evento.id} className="flex items-start gap-3">
               <div className="flex w-12 shrink-0 flex-col items-center rounded-lg bg-brand-50 py-1.5 text-brand-700">
@@ -44,12 +39,12 @@ export function ProximosEventos({ eventos }: ProximosEventosProps) {
         })}
       </ul>
 
-      <button
-        type="button"
-        className="mt-5 w-full cursor-pointer text-center text-xs font-semibold tracking-wide text-brand-700 uppercase hover:text-brand-800"
+      <Link
+        to="/estudiante/calendario"
+        className="mt-5 block w-full text-center text-xs font-semibold tracking-wide text-brand-700 uppercase hover:text-brand-800"
       >
         Ver calendario completo
-      </button>
+      </Link>
     </div>
   )
 }

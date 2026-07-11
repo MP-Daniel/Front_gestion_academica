@@ -43,10 +43,7 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
 }
 
 const NAV_SECUNDARIO_POR_ROL: Partial<Record<Rol, ItemNav[]>> = {
-  ESTUDIANTE: [
-    { etiqueta: 'Configuración', ruta: '/estudiante/configuracion', icono: Settings },
-    { etiqueta: 'Soporte', ruta: '/estudiante/soporte', icono: HelpCircle },
-  ],
+  ESTUDIANTE: [{ etiqueta: 'Soporte', ruta: '/estudiante/soporte', icono: HelpCircle }],
 }
 
 export function Sidebar() {
