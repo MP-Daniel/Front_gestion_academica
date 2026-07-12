@@ -3,11 +3,15 @@
 // (protegido con hasRole('ESTUDIANTE'), resolviendo el estudiante a partir del
 // @AuthenticationPrincipal, igual que el resto de los endpoints de autoservicio).
 
+import type { EstadoMatricula } from './matricula.types'
+
 export type NivelPromedio = 'BAJO' | 'BASICO' | 'ALTO' | 'SUPERIOR'
 
 export interface ResumenEstudianteDashboard {
   nombreCompleto: string
   gradoNombre: string
+  // Null solo cuando el estudiante no tiene matrícula en el año lectivo activo.
+  estadoMatricula: EstadoMatricula | null
   jornada: string | null
 }
 

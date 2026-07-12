@@ -1,4 +1,13 @@
+import { Badge, type BadgeColor } from '@/components/ui/Badge'
 import type { ResumenAnioLectivoCalificaciones } from '@/types/calificaciones.types'
+import type { EstadoMatricula } from '@/types/matricula.types'
+
+const COLOR_ESTADO: Record<EstadoMatricula, BadgeColor> = {
+  ACTIVA: 'brand',
+  PROMOVIDA: 'blue',
+  REPROBADA: 'orange',
+  RETIRADA: 'red',
+}
 
 interface BandaAnioLectivoProps {
   anioLectivo: ResumenAnioLectivoCalificaciones
@@ -13,9 +22,16 @@ export function BandaAnioLectivo({ anioLectivo }: BandaAnioLectivoProps) {
           <p className="text-lg font-bold text-slate-900">
             Año Lectivo {anioLectivo.anio ?? '—'}
           </p>
-          <span className="mt-1 inline-block rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-            {anioLectivo.gradoNombre}
-          </span>
+          <div className="mt-1 flex flex-wrap items-center gap-2">
+            <span className="inline-block rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+              {anioLectivo.gradoNombre}
+            </span>
+            {anioLectivo.estadoMatricula && (
+              <Badge color={COLOR_ESTADO[anioLectivo.estadoMatricula]}>
+                Matrícula {anioLectivo.estadoMatricula}
+              </Badge>
+            )}
+          </div>
         </div>
       </div>
 
