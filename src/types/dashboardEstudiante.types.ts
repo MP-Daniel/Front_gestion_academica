@@ -1,9 +1,11 @@
-// Contratos propuestos para el dashboard del estudiante.
-// El backend aún no expone este endpoint: se sugiere GET /api/dashboard/estudiante
-// (protegido con hasRole('ESTUDIANTE'), resolviendo el estudiante a partir del
+// Contratos del dashboard del estudiante: GET /api/dashboard/estudiante
+// (protegido con hasRole('ESTUDIANTE'), resuelve el estudiante a partir del
 // @AuthenticationPrincipal, igual que el resto de los endpoints de autoservicio).
 
 import type { EstadoMatricula } from './matricula.types'
+import type { EventoInstitucional } from './eventos.types'
+
+export type { EventoInstitucional as EventoProximo } from './eventos.types'
 
 export type NivelPromedio = 'BAJO' | 'BASICO' | 'ALTO' | 'SUPERIOR'
 
@@ -22,14 +24,6 @@ export interface ResumenPromedio {
   historicoPeriodos: number[]
 }
 
-export interface EventoProximo {
-  id: number
-  titulo: string
-  descripcion: string
-  fecha: string
-  lugar: string | null
-}
-
 export interface AsignaturaHoy {
   id: number
   nombre: string
@@ -41,6 +35,6 @@ export interface DashboardEstudiante {
   estudiante: ResumenEstudianteDashboard
   promedioGeneral: ResumenPromedio
   entregasPendientes: number
-  proximosEventos: EventoProximo[]
+  proximosEventos: EventoInstitucional[]
   asignaturasHoy: AsignaturaHoy[]
 }

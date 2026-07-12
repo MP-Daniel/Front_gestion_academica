@@ -22,3 +22,10 @@ export function urlBackend(ruta: string): string {
   const base = (import.meta.env.VITE_BACKEND_API as string).replace(/\/api\/?$/, '')
   return `${base}${ruta}`
 }
+
+const MESES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC']
+
+export function formatearFechaCorta(fechaIso: string): { dia: number; mes: string } {
+  const fecha = new Date(fechaIso)
+  return { dia: fecha.getDate(), mes: MESES[fecha.getMonth()] }
+}
