@@ -1,6 +1,10 @@
+import type { EstadoMatricula } from './matricula.types'
+
 export interface ResumenAnioLectivoCalificaciones {
   anio: number | null
   gradoNombre: string
+  // Null solo cuando el estudiante no tiene matrícula en el año lectivo activo.
+  estadoMatricula: EstadoMatricula | null
   directorGrupo: string | null
   periodoActual: string | null
 }

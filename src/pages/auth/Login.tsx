@@ -71,13 +71,11 @@ export default function Login() {
         </div>
       </header>
 
-      <main className="relative flex flex-1 items-center justify-center overflow-hidden py-10">
+      <main className="relative isolate flex flex-1 items-center justify-center overflow-hidden py-10">
         <div className="pointer-events-none absolute inset-0 -z-10 flex flex-col">
           <div className="h-[38%] bg-[#dfeee4]" />
           <div className="h-[32%] bg-[#f5f0dd]" />
           <div className="h-[30%] bg-[#dde3ee]" />
-          <div className="absolute -left-16 top-16 h-56 w-56 rounded-full bg-accent-300/60 blur-3xl" />
-          <div className="absolute -right-16 bottom-16 h-72 w-72 rounded-full bg-blue-200/50 blur-3xl" />
         </div>
 
         <div className="w-full max-w-md rounded-2xl border-t-4 border-brand-600 bg-white p-8 shadow-xl">

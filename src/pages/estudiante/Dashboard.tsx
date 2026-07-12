@@ -59,7 +59,11 @@ export default function Dashboard() {
             <BienvenidaBanner nombre={nombreCompleto(usuario)} entregasPendientes={dashboard.entregasPendientes} />
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-              <TarjetaGrado gradoNombre={dashboard.estudiante.gradoNombre} jornada={dashboard.estudiante.jornada} />
+              <TarjetaGrado
+                gradoNombre={dashboard.estudiante.gradoNombre}
+                estadoMatricula={dashboard.estudiante.estadoMatricula}
+                jornada={dashboard.estudiante.jornada}
+              />
               <TarjetaPromedio {...dashboard.promedioGeneral} />
               <ProximosEventos eventos={dashboard.proximosEventos} />
             </div>

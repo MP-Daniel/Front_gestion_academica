@@ -1,11 +1,21 @@
 import { GraduationCap } from 'lucide-react'
+import { Badge, type BadgeColor } from '@/components/ui/Badge'
+import type { EstadoMatricula } from '@/types/matricula.types'
+
+const COLOR_ESTADO: Record<EstadoMatricula, BadgeColor> = {
+  ACTIVA: 'brand',
+  PROMOVIDA: 'blue',
+  REPROBADA: 'orange',
+  RETIRADA: 'red',
+}
 
 interface TarjetaGradoProps {
   gradoNombre: string
+  estadoMatricula: EstadoMatricula | null
   jornada: string | null
 }
 
-export function TarjetaGrado({ gradoNombre, jornada }: TarjetaGradoProps) {
+export function TarjetaGrado({ gradoNombre, estadoMatricula, jornada }: TarjetaGradoProps) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between">
@@ -16,6 +26,11 @@ export function TarjetaGrado({ gradoNombre, jornada }: TarjetaGradoProps) {
       </div>
 
       <p className="mt-2 text-3xl font-bold text-slate-900">{gradoNombre}</p>
+      {estadoMatricula && (
+        <div className="mt-1">
+          <Badge color={COLOR_ESTADO[estadoMatricula]}>Matrícula {estadoMatricula}</Badge>
+        </div>
+      )}
       {jornada && <p className="text-sm text-slate-400">Jornada {jornada}</p>}
 
       <div className="relative mt-5 flex h-32 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-b from-brand-600 via-accent-400 to-blue-900">

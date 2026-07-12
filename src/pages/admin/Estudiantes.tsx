@@ -5,21 +5,31 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Avatar } from '@/components/ui/Avatar'
-import { Badge } from '@/components/ui/Badge'
+import { Badge, type BadgeColor } from '@/components/ui/Badge'
 import { Paginacion } from '@/components/ui/Paginacion'
 import { TarjetaResumen } from '@/components/ui/TarjetaResumen'
 import { Spinner } from '@/components/ui/Spinner'
 import { DialogoConfirmacion } from '@/components/ui/DialogoConfirmacion'
 import { desactivarEstudiante, listarEstudiantes } from '@/api/estudiantes.api'
 import { extraerMensajeError } from '@/api/axios'
+import { useAnioLectivo } from '@/hooks/useAnioLectivo'
 import { nombreCompleto } from '@/lib/utils'
 import type { Estudiante } from '@/types/estudiante.types'
+import type { EstadoMatricula } from '@/types/matricula.types'
 import type { PaginaSpring } from '@/types/api.types'
 
 const TAMANO_PAGINA = 10
 
+const COLOR_ESTADO: Record<EstadoMatricula, BadgeColor> = {
+  ACTIVA: 'brand',
+  PROMOVIDA: 'blue',
+  REPROBADA: 'orange',
+  RETIRADA: 'red',
+}
+
 export default function Estudiantes() {
   const navigate = useNavigate()
+  const { soloLectura } = useAnioLectivo()
   const [pagina, setPagina] = useState(0)
   const [resultado, setResultado] = useState<PaginaSpring<Estudiante> | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -118,8 +128,17 @@ export default function Estudiantes() {
                         <p className="text-slate-700">CC {estudiante.documento}</p>
                       </td>
                       <td className="px-6 py-4">
-                        {estudiante.gradoActualNombre ? (
+                        {soloLectura ? (
+                          <p className="text-xs text-slate-400">No disponible para años anteriores</p>
+                        ) : estudiante.gradoActualNombre ? (
                           <Badge color="blue">{estudiante.gradoActualNombre}</Badge>
+                        ) : estudiante.ultimaMatriculaGrado && estudiante.ultimaMatriculaEstado ? (
+                          <div className="flex items-center gap-1.5">
+                            <Badge color="slate">{estudiante.ultimaMatriculaGrado}</Badge>
+                            <Badge color={COLOR_ESTADO[estudiante.ultimaMatriculaEstado]}>
+                              {estudiante.ultimaMatriculaEstado}
+                            </Badge>
+                          </div>
                         ) : (
                           <p className="text-xs text-slate-400">Sin matricular</p>
                         )}
