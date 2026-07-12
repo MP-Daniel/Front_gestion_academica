@@ -18,7 +18,10 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
 	(response) => response,
 	(error: AxiosError) => {
-		if (error.response?.status === 401) {
+		// El 401 de /auth/login son credenciales inválidas, no una sesión vencida:
+		// se deja pasar para que el formulario muestre el error sin recargar la página.
+		const esIntentoDeLogin = error.config?.url?.includes("/auth/login");
+		if (error.response?.status === 401 && !esIntentoDeLogin) {
 			useAuthStore.getState().cerrarSesion();
 			window.location.assign("/login");
 		}
