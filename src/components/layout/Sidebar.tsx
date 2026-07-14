@@ -3,6 +3,7 @@ import {
   BarChart3,
   BookMarked,
   BookOpen,
+  ClipboardList,
   FileText,
   GraduationCap,
   HelpCircle,
@@ -35,7 +36,10 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
     { etiqueta: 'Reportes', ruta: '/admin/reportes', icono: BarChart3 },
     { etiqueta: 'Configuración', ruta: '/admin/configuracion', icono: Settings },
   ],
-  DOCENTE: [{ etiqueta: 'Dashboard', ruta: '/docente', icono: LayoutDashboard }],
+  DOCENTE: [
+    { etiqueta: 'Inicio', ruta: '/docente', icono: LayoutDashboard },
+    { etiqueta: 'Planilla de Calificaciones', ruta: '/docente/planilla', icono: ClipboardList },
+  ],
   ESTUDIANTE: [
     { etiqueta: 'Inicio', ruta: '/estudiante', icono: Home },
     { etiqueta: 'Calificaciones', ruta: '/estudiante/calificaciones', icono: FileText },
@@ -43,6 +47,10 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
 }
 
 const NAV_SECUNDARIO_POR_ROL: Partial<Record<Rol, ItemNav[]>> = {
+  DOCENTE: [
+    { etiqueta: 'Configuración', ruta: '/docente/configuracion', icono: Settings },
+    { etiqueta: 'Soporte', ruta: '/docente/soporte', icono: HelpCircle },
+  ],
   ESTUDIANTE: [{ etiqueta: 'Soporte', ruta: '/estudiante/soporte', icono: HelpCircle }],
 }
 
