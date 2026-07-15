@@ -1,15 +1,9 @@
 import { BookOpen, Clock, Users } from 'lucide-react'
-
-export interface ClaseHoy {
-  id: number
-  hora: string
-  asignatura: string
-  grado: string
-  cantidadEstudiantes: number
-}
+import { formatearHora } from '@/lib/utils'
+import type { ClaseHoyDocente } from '@/types/dashboardDocente.types'
 
 interface CargaAcademicaProps {
-  clases: ClaseHoy[]
+  clases: ClaseHoyDocente[]
 }
 
 export function CargaAcademica({ clases }: CargaAcademicaProps) {
@@ -42,7 +36,7 @@ export function CargaAcademica({ clases }: CargaAcademicaProps) {
 
               <div className="flex items-center gap-1.5 text-sm text-slate-500">
                 <Clock size={14} />
-                {clase.hora}
+                {formatearHora(clase.horaInicio)} - {formatearHora(clase.horaFin)}
               </div>
 
               <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600">

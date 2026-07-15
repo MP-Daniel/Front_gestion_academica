@@ -1,25 +1,11 @@
 import { AlertOctagon } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
-import type { BadgeColor } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
-
-export type EstadoAlerta = 'RIESGO_DESERCION' | 'BAJO_RENDIMIENTO'
-
-export interface EstudianteAlerta {
-  id: number
-  nombre: string
-  grado: string
-  estado: EstadoAlerta
-}
-
-const ESTILO_ESTADO: Record<EstadoAlerta, { texto: string; color: BadgeColor }> = {
-  RIESGO_DESERCION: { texto: 'Riesgo de Deserción', color: 'red' },
-  BAJO_RENDIMIENTO: { texto: 'Bajo Rendimiento', color: 'orange' },
-}
+import type { EstudianteBajoRendimiento } from '@/types/dashboardDocente.types'
 
 interface AlertasSeguimientoProps {
-  estudiantes: EstudianteAlerta[]
+  estudiantes: EstudianteBajoRendimiento[]
 }
 
 export function AlertasSeguimiento({ estudiantes }: AlertasSeguimientoProps) {
@@ -36,19 +22,21 @@ export function AlertasSeguimiento({ estudiantes }: AlertasSeguimientoProps) {
         <p className="mt-4 text-sm text-slate-400">No hay estudiantes en seguimiento por ahora.</p>
       ) : (
         <ul className="mt-4 flex flex-col divide-y divide-slate-100">
-          {estudiantes.map((estudiante) => {
-            const estilo = ESTILO_ESTADO[estudiante.estado]
-            return (
-              <li key={estudiante.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <Avatar nombre={estudiante.nombre} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-slate-900">{estudiante.nombre}</p>
-                  <p className="truncate text-xs text-slate-500">{estudiante.grado}</p>
-                </div>
-                <Badge color={estilo.color}>{estilo.texto}</Badge>
-              </li>
-            )
-          })}
+          {estudiantes.map((estudiante) => (
+            <li
+              key={`${estudiante.estudianteId}-${estudiante.nombreAsignatura}`}
+              className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
+            >
+              <Avatar nombre={estudiante.nombreCompleto} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-slate-900">{estudiante.nombreCompleto}</p>
+                <p className="truncate text-xs text-slate-500">
+                  {estudiante.gradoNombre} · {estudiante.nombreAsignatura}
+                </p>
+              </div>
+              <Badge color="orange">Bajo Rendimiento · {estudiante.promedio.toFixed(1)}</Badge>
+            </li>
+          ))}
         </ul>
       )}
 
