@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { BookOpenText, Calculator, ChevronLeft, ChevronRight, FlaskConical, Sprout } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, formatearHora } from '@/lib/utils'
 import type { AsignaturaHoy as AsignaturaHoyDto } from '@/types/dashboardEstudiante.types'
 
 const ICONO_POR_PALABRA_CLAVE: Array<{ palabra: string; icono: LucideIcon; color: string }> = [
@@ -69,7 +69,7 @@ export function AsignaturasHoy({ asignaturas }: AsignaturasHoyProps) {
                 </div>
                 <p className="mt-3 truncate text-sm font-semibold text-slate-900">{asignatura.nombre}</p>
                 <p className="text-xs text-slate-400">
-                  {asignatura.horaInicio} - {asignatura.horaFin}
+                  {formatearHora(asignatura.horaInicio)} - {formatearHora(asignatura.horaFin)}
                 </p>
               </div>
             )
