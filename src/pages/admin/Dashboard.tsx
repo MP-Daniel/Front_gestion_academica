@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BookOpen, GraduationCap, IdCard, Layers3, School } from 'lucide-react'
+import { BookOpen, GraduationCap, IdCard, Layers3 } from 'lucide-react'
 import { obtenerDashboardAdmin } from '@/api/dashboard.api'
 import { Navbar } from '@/components/layout/Navbar'
 import { StatCard } from '@/components/ui/StatCard'
@@ -61,12 +61,46 @@ export default function Dashboard() {
             {error}
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            <StatCard etiqueta="Total Estudiantes" valor={dashboard?.totalEstudiantes ?? 0} icono={GraduationCap} color="blue" />
-            <StatCard etiqueta="Matrículas Activas" valor={dashboard?.matriculasActivas ?? 0} icono={School} color="brand" />
-            <StatCard etiqueta="Docentes Activos" valor={dashboard?.docentesActivos ?? 0} icono={IdCard} color="accent" />
-            <StatCard etiqueta="Total Asignaturas" valor={dashboard?.totalAsignaturas ?? 0} icono={BookOpen} color="blue" />
-            <StatCard etiqueta="Total Grados" valor={dashboard?.totalGrados ?? 0} icono={Layers3} color="brand" />
+          <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,0.85fr)_minmax(0,1.25fr)] xl:gap-4 xl:items-start">
+            <div className="flex flex-col gap-6 text-slate-900">
+              <article className="relative w-full overflow-hidden rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_20px_50px_-30px_rgba(15,23,42,0.45)]">
+                <div className="absolute inset-y-0 left-0 w-1 bg-linear-to-b from-brand-600 via-brand-500 to-accent-500" />
+                <div className="absolute -right-14 -top-16 h-44 w-44 rounded-full bg-brand-100/70 blur-3xl" />
+                <div className="absolute -bottom-16 right-6 h-32 w-32 rounded-full bg-accent-100/80 blur-3xl" />
+
+                <div className="relative flex items-start justify-between gap-6">
+                  <div className="relative z-10 min-w-0">
+                    <p className="text-xs font-semibold uppercase text-slate-400">
+                      Total estudiantes
+                    </p>
+                    <p className="mt-1 text-4xl font-black leading-none text-slate-900">
+                      {dashboard?.totalEstudiantes ?? 0}
+                    </p>
+
+                    <div className="mt-4 border-t border-slate-100 pt-3">
+                      <p className="text-xs font-semibold uppercase text-slate-400">
+                        Matriculados
+                      </p>
+                      <p className="mt-1 text-2xl font-black leading-none text-slate-800">
+                        {dashboard?.matriculasActivas ?? 0}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pointer-events-none absolute right-2 top-2 z-0 flex h-24 w-24 -translate-y-1/4 translate-x-1/4 -rotate-12 items-center justify-center rounded-3xl bg-brand-50 text-brand-600 opacity-14 shadow-inner ring-1 ring-brand-100">
+                    <GraduationCap size={82} strokeWidth={2.2} />
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <StatCard etiqueta="Docentes Activos" valor={dashboard?.docentesActivos ?? 0} icono={IdCard} color="accent" />
+              <StatCard etiqueta="Total Asignaturas" valor={dashboard?.totalAsignaturas ?? 0} icono={BookOpen} color="blue" />
+              <StatCard etiqueta="Total Grados" valor={dashboard?.totalGrados ?? 0} icono={Layers3} color="brand" />
+            </div>
+
+            <section className="h-full min-h-80 rounded-[28px] border border-dashed border-slate-200 bg-white/60 shadow-[0_20px_50px_-35px_rgba(15,23,42,0.25)]" />
           </div>
         )}
       </main>
