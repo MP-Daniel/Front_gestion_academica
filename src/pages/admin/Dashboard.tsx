@@ -1,15 +1,22 @@
 import { useEffect, useState } from 'react'
 import { BookOpen, GraduationCap, IdCard, Layers3 } from 'lucide-react'
 import { obtenerDashboardAdmin } from '@/api/dashboard.api'
+import { listarEventos } from '@/api/eventos.api'
+import { extraerMensajeError } from '@/api/axios'
 import { Navbar } from '@/components/layout/Navbar'
 import { StatCard } from '@/components/ui/StatCard'
 import { Spinner } from '@/components/ui/Spinner'
+import { ProximosEventos } from '@/components/eventos/ProximosEventos'
 import type { DashboardAdmin } from '@/types/dashboardAdmin.types'
+import type { EventoInstitucional } from '@/types/eventos.types'
 
 export default function Dashboard() {
   const [dashboard, setDashboard] = useState<DashboardAdmin | null>(null)
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [eventos, setEventos] = useState<EventoInstitucional[]>([])
+  const [cargandoEventos, setCargandoEventos] = useState(true)
+  const [errorEventos, setErrorEventos] = useState<string | null>(null)
 
   useEffect(() => {
     let activo = true
@@ -26,6 +33,17 @@ export default function Dashboard() {
       })
       .finally(() => {
         if (activo) setCargando(false)
+      })
+
+    listarEventos()
+      .then((datos) => {
+        if (activo) setEventos(datos)
+      })
+      .catch((error: unknown) => {
+        if (activo) setErrorEventos(extraerMensajeError(error))
+      })
+      .finally(() => {
+        if (activo) setCargandoEventos(false)
       })
 
     return () => {
@@ -100,7 +118,17 @@ export default function Dashboard() {
               <StatCard etiqueta="Total Grados" valor={dashboard?.totalGrados ?? 0} icono={Layers3} color="brand" />
             </div>
 
-            <section className="h-full min-h-80 rounded-[28px] border border-dashed border-slate-200 bg-white/60 shadow-[0_20px_50px_-35px_rgba(15,23,42,0.25)]" />
+            {cargandoEventos ? (
+              <section className="flex min-h-80 items-center justify-center rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <Spinner />
+              </section>
+            ) : errorEventos ? (
+              <section className="flex min-h-80 items-center rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
+                {errorEventos}
+              </section>
+            ) : (
+              <ProximosEventos eventos={eventos} />
+            )}
           </div>
         )}
       </main>

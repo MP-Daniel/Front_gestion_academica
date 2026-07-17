@@ -3,6 +3,7 @@ import { listarEventos } from '@/api/eventos.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
 import { Spinner } from '@/components/ui/Spinner'
+import { Navbar } from '@/components/layout/Navbar'
 import { NavbarEstudiante } from '@/components/layout/NavbarEstudiante'
 import { formatearFechaCorta } from '@/lib/utils'
 import type { EventoInstitucional } from '@/types/eventos.types'
@@ -30,9 +31,18 @@ export default function Calendario() {
 
   if (!usuario) return null
 
+  const esAdministrador = usuario.rol === 'ADMIN'
+
   return (
     <>
-      <NavbarEstudiante usuario={usuario} seccionActual="Calendario" />
+      {esAdministrador ? (
+        <Navbar
+          titulo="Calendario Institucional"
+          subtitulo="Eventos y actividades programadas por la institución"
+        />
+      ) : (
+        <NavbarEstudiante usuario={usuario} seccionActual="Calendario" />
+      )}
 
       <main className="flex-1 p-8">
         <h2 className="text-2xl font-bold text-slate-900">Calendario Institucional</h2>

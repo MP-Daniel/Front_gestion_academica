@@ -1,10 +1,10 @@
 import { Calendar } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { formatearFechaCorta } from '@/lib/utils'
-import type { EventoProximo } from '@/types/dashboardEstudiante.types'
+import type { EventoInstitucional } from '@/types/eventos.types'
 
 interface ProximosEventosProps {
-  eventos: EventoProximo[]
+  eventos: EventoInstitucional[]
 }
 
 export function ProximosEventos({ eventos }: ProximosEventosProps) {
@@ -40,7 +40,7 @@ export function ProximosEventos({ eventos }: ProximosEventosProps) {
       </ul>
 
       <Link
-        to="/estudiante/calendario"
+        to="/calendario"
         className="mt-5 block w-full text-center text-xs font-semibold tracking-wide text-brand-700 uppercase hover:text-brand-800"
       >
         Ver calendario completo
