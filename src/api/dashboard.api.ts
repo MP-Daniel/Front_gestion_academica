@@ -9,6 +9,7 @@ export async function obtenerDashboardEstudiante(): Promise<DashboardEstudiante>
 
 export async function obtenerDashboardAdmin(): Promise<DashboardAdmin> {
   return api.get<DashboardAdmin>('/dashboard/admin')
+}
 export async function obtenerDashboardDocente(): Promise<DashboardDocente> {
   return api.get<DashboardDocente>('/dashboard/docente')
 }
