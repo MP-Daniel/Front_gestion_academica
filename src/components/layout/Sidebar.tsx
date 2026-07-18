@@ -3,6 +3,7 @@ import {
   BarChart3,
   BookMarked,
   BookOpen,
+  CalendarDays,
   ClipboardList,
   FileText,
   GraduationCap,
@@ -29,6 +30,7 @@ interface ItemNav {
 const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
   ADMIN: [
     { etiqueta: 'Dashboard', ruta: '/admin', icono: LayoutDashboard },
+    { etiqueta: 'Calendario', ruta: '/calendario', icono: CalendarDays },
     { etiqueta: 'Docentes', ruta: '/admin/docentes', icono: Users },
     { etiqueta: 'Estudiantes', ruta: '/admin/estudiantes', icono: GraduationCap },
     { etiqueta: 'Cursos', ruta: '/admin/cursos', icono: BookOpen },
@@ -42,6 +44,7 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
   ],
   ESTUDIANTE: [
     { etiqueta: 'Inicio', ruta: '/estudiante', icono: Home },
+    { etiqueta: 'Calendario', ruta: '/calendario', icono: CalendarDays },
     { etiqueta: 'Calificaciones', ruta: '/estudiante/calificaciones', icono: FileText },
   ],
 }

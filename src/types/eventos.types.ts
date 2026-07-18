@@ -5,3 +5,10 @@ export interface EventoInstitucional {
   fecha: string
   lugar: string | null
 }
+
+export interface SolicitudCrearEvento {
+  titulo: string
+  descripcion: string
+  fecha: string
+  lugar: string | null
+}
