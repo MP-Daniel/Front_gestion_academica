@@ -54,7 +54,7 @@ export default function Dashboard() {
           <div className="flex justify-center rounded-xl border border-slate-200 bg-white py-16">
             <Spinner />
           </div>
-        ) : (
+        ) : ( // Modificar esta parte ya que entregas Pendientes ya no se mostrará en el banner de bienvenida, pero se mantiene en la interfaz de BienvenidaBanner para posibles usos futuros.
           <div className="flex flex-col gap-6">
             <BienvenidaBanner nombre={nombreCompleto(usuario)} entregasPendientes={dashboard.entregasPendientes} />
 

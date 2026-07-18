@@ -54,7 +54,12 @@ export const router = createBrowserRouter([
           },
           {
             element: <RutaPorRol rolesPermitidos={['DOCENTE']} />,
-            children: [{ path: '/docente', element: <DocenteDashboard /> }],
+            children: [
+              {
+                element: <Layout />,
+                children: [{ path: '/docente', element: <DocenteDashboard /> }],
+              },
+            ],
           },
           {
             element: <RutaPorRol rolesPermitidos={['ESTUDIANTE']} />,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Award, CheckCircle2, Download, ListChecks, TrendingDown, TrendingUp } from 'lucide-react'
+import { Award, CheckCircle2, Download, TrendingDown, TrendingUp } from 'lucide-react'
 import { obtenerCalificacionesEstudiante } from '@/api/calificaciones.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
@@ -70,7 +70,7 @@ export default function Calificaciones() {
 
             <BandaAnioLectivo anioLectivo={calificaciones.anioLectivo} />
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <TarjetaIndicador
                 icono={mejorando ? TrendingUp : TrendingDown}
                 colorIcono="bg-brand-50 text-brand-700"
@@ -102,13 +102,6 @@ export default function Calificaciones() {
                 valor={calificaciones.resumen.puestoEnGrupo ? `${calificaciones.resumen.puestoEnGrupo}°` : '—'}
                 etiqueta="Puesto en Grupo"
                 insignia={{ texto: `de ${calificaciones.resumen.totalEstudiantesGrupo}`, color: 'accent' }}
-              />
-              <TarjetaIndicador
-                icono={ListChecks}
-                colorIcono="bg-slate-100 text-slate-600"
-                valor={calificaciones.resumen.pendientesAcademicos}
-                etiqueta="Pendientes Académicos"
-                insignia={{ texto: 'Al día', color: 'slate' }}
               />
             </div>
 

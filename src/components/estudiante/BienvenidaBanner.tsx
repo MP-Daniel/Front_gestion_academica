@@ -1,5 +1,7 @@
 interface BienvenidaBannerProps {
   nombre: string
+  // Se mantiene el prop para posibles usos futuros, aunque el CTA de "Ver mis tareas"
+  // que lo acompañaba ya se quitó del banner.
   entregasPendientes: number
 }
 

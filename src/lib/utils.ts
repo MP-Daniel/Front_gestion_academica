@@ -29,3 +29,8 @@ export function formatearFechaCorta(fechaIso: string): { dia: number; mes: strin
   const fecha = new Date(fechaIso)
   return { dia: fecha.getDate(), mes: MESES[fecha.getMonth()] }
 }
+
+// El backend serializa LocalTime como "HH:mm:ss"; la UI solo necesita "HH:mm".
+export function formatearHora(hora: string): string {
+  return hora.slice(0, 5)
+}
