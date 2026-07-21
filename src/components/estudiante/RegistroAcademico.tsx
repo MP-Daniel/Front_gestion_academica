@@ -1,5 +1,5 @@
 import { Table2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { cn, estiloNotaFinal } from '@/lib/utils'
 import type { AsignaturaCalificacion } from '@/types/calificaciones.types'
 
 const BARRAS_COLOR = ['bg-blue-500', 'bg-purple-500', 'bg-brand-500', 'bg-orange-500', 'bg-pink-500', 'bg-cyan-500']
@@ -7,12 +7,6 @@ const BARRAS_COLOR = ['bg-blue-500', 'bg-purple-500', 'bg-brand-500', 'bg-orange
 function colorPorNombre(nombre: string) {
   const hash = [...nombre].reduce((acumulado, caracter) => acumulado + caracter.charCodeAt(0), 0)
   return BARRAS_COLOR[hash % BARRAS_COLOR.length]
-}
-
-function estiloNotaFinal(valor: number) {
-  if (valor >= 3.5) return 'bg-brand-50 text-brand-700 border-brand-200'
-  if (valor >= 3.0) return 'bg-accent-100 text-accent-700 border-accent-300'
-  return 'bg-red-50 text-red-600 border-red-200'
 }
 
 interface RegistroAcademicoProps {

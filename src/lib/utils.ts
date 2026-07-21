@@ -34,3 +34,10 @@ export function formatearFechaCorta(fechaIso: string): { dia: number; mes: strin
 export function formatearHora(hora: string): string {
   return hora.slice(0, 5)
 }
+
+// Mismo umbral en toda la app: >=3.5 aprobado, >=3.0 básico, el resto bajo.
+export function estiloNotaFinal(valor: number): string {
+  if (valor >= 3.5) return 'bg-brand-50 text-brand-700 border-brand-200'
+  if (valor >= 3.0) return 'bg-accent-100 text-accent-700 border-accent-300'
+  return 'bg-red-50 text-red-600 border-red-200'
+}
