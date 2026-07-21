@@ -8,12 +8,12 @@ const PERIODOS_MOCK = ['Periodo 1', 'Periodo 2' ]
 
 interface NavbarDocenteProps {
   usuario: Usuario
-  cargo: string
+  cargo?: string
   raiz?: string
   seccionActual: string
 }
 
-export function NavbarDocente({ usuario, cargo, raiz = 'Portal Docente', seccionActual }: NavbarDocenteProps) {
+export function NavbarDocente({ usuario, cargo = '', raiz = 'Portal Docente', seccionActual }: NavbarDocenteProps) {
   const [periodoSeleccionado, setPeriodoSeleccionado] = useState(PERIODOS_MOCK[1])
   const [selectorAbierto, setSelectorAbierto] = useState(false)
   const [notificacionesAbiertas, setNotificacionesAbiertas] = useState(false)
@@ -95,7 +95,7 @@ export function NavbarDocente({ usuario, cargo, raiz = 'Portal Docente', seccion
         <div className="flex items-center gap-3">
           <div className="text-right">
             <p className="text-sm font-bold text-slate-900">{nombreCompleto(usuario)}</p>
-            <p className="text-xs text-slate-400">{cargo}</p>
+            {cargo && <p className="text-xs text-slate-400">{cargo}</p>}
           </div>
           <Avatar nombre={nombreCompleto(usuario)} tamano="md" />
         </div>
