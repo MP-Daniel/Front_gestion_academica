@@ -12,6 +12,7 @@ import { extraerMensajeError } from '@/api/axios'
 import { useAnioLectivo } from '@/hooks/useAnioLectivo'
 import type { AnioLectivo } from '@/types/anioLectivo.types'
 import type { Periodo } from '@/types/periodo.types'
+import { InstitucionConfig } from './InstitucionConfig'
 
 const FORM_PERIODO_VACIO = { nombre: '', porcentaje: '', fechaInicio: '', fechaFin: '' }
 
@@ -182,6 +183,8 @@ export default function Configuracion() {
       <Navbar titulo="Configuración" subtitulo="Ajustes generales del sistema" />
 
       <main className="flex-1 p-8">
+        <InstitucionConfig />
+
         <div className="flex items-center gap-2">
           <CalendarCheck className="text-brand-600" size={22} />
           <h2 className="text-2xl font-bold text-slate-900">Años Lectivos</h2>
