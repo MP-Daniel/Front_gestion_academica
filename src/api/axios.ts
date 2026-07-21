@@ -42,6 +42,10 @@ export const api = {
 		axiosClient.patch<T>(url, data, config).then((response) => response.data),
 	delete: <T>(url: string, config?: AxiosRequestConfig) =>
 		axiosClient.delete<T>(url, config).then((response) => response.data),
+	// Devuelve la respuesta completa (no solo `.data`) porque quien la use necesita
+	// también los headers (Content-Disposition) para el nombre del archivo.
+	getBlob: (url: string, config?: AxiosRequestConfig) =>
+		axiosClient.get<Blob>(url, { ...config, responseType: "blob" }),
 };
 
 export function extraerMensajeError(error: unknown): string {
