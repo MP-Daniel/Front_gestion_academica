@@ -5,11 +5,13 @@ import type { Estudiante, SolicitudActualizarEstudiante, SolicitudCrearEstudiant
 interface ParametrosListarEstudiantes {
   pagina?: number
   tamanoPagina?: number
+  incluirInactivos?: boolean
 }
 
 export async function listarEstudiantes({
   pagina = 0,
   tamanoPagina = 10,
+  incluirInactivos = true,
 }: ParametrosListarEstudiantes = {}): Promise<PaginaSpring<Estudiante>> {
   return api.get<PaginaSpring<Estudiante>>('/estudiantes', {
     params: {
@@ -17,6 +19,7 @@ export async function listarEstudiantes({
       size: tamanoPagina,
       sortBy: 'PRIMER_NOMBRE',
       direction: 'ASC',
+      incluirInactivos,
     },
   })
 }
@@ -34,5 +37,13 @@ export async function actualizarEstudiante(id: number, datos: SolicitudActualiza
 }
 
 export async function desactivarEstudiante(id: number): Promise<void> {
+  await api.patch(`/estudiantes/${id}/desactivar`)
+}
+
+export async function activarEstudiante(id: number): Promise<void> {
+  await api.patch(`/estudiantes/${id}/activar`)
+}
+
+export async function eliminarEstudiante(id: number): Promise<void> {
   await api.delete(`/estudiantes/${id}`)
 }

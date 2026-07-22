@@ -43,5 +43,13 @@ export async function actualizarFirmaDocente(id: number, archivo: File): Promise
 }
 
 export async function desactivarDocente(id: number): Promise<void> {
+  await api.patch(`/docentes/${id}/desactivar`)
+}
+
+export async function activarDocente(id: number): Promise<void> {
+  await api.patch(`/docentes/${id}/activar`)
+}
+
+export async function eliminarDocente(id: number): Promise<void> {
   await api.delete(`/docentes/${id}`)
 }

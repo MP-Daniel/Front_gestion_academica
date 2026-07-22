@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircle2, GraduationCap, Pencil, Search, Trash2, UserPlus } from 'lucide-react'
+import { CheckCircle2, GraduationCap, Pencil, Search, Trash2, UserPlus, UserCheck, UserX } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -10,7 +10,7 @@ import { Paginacion } from '@/components/ui/Paginacion'
 import { TarjetaResumen } from '@/components/ui/TarjetaResumen'
 import { Spinner } from '@/components/ui/Spinner'
 import { DialogoConfirmacion } from '@/components/ui/DialogoConfirmacion'
-import { desactivarDocente, listarDocentes } from '@/api/docentes.api'
+import { activarDocente, desactivarDocente, eliminarDocente, listarDocentes } from '@/api/docentes.api'
 import { extraerMensajeError } from '@/api/axios'
 import { nombreCompleto } from '@/lib/utils'
 import type { Docente } from '@/types/docente.types'
@@ -36,6 +36,10 @@ export default function Docentes() {
   const [eliminando, setEliminando] = useState(false)
   const [errorEliminar, setErrorEliminar] = useState<string | null>(null)
 
+  const [docenteACambiarEstado, setDocenteACambiarEstado] = useState<Docente | null>(null)
+  const [cambiandoEstado, setCambiandoEstado] = useState(false)
+  const [errorCambiarEstado, setErrorCambiarEstado] = useState<string | null>(null)
+
   useEffect(() => {
     let vigente = true
     setError(null)
@@ -58,13 +62,32 @@ export default function Docentes() {
     setEliminando(true)
     setErrorEliminar(null)
     try {
-      await desactivarDocente(docenteAEliminar.id)
+      await eliminarDocente(docenteAEliminar.id)
       setDocenteAEliminar(null)
       setRecarga((valor) => valor + 1)
     } catch (error) {
       setErrorEliminar(extraerMensajeError(error))
     } finally {
       setEliminando(false)
+    }
+  }
+
+  const confirmarCambioEstado = async () => {
+    if (!docenteACambiarEstado) return
+    setCambiandoEstado(true)
+    setErrorCambiarEstado(null)
+    try {
+      if (docenteACambiarEstado.activo) {
+        await desactivarDocente(docenteACambiarEstado.id)
+      } else {
+        await activarDocente(docenteACambiarEstado.id)
+      }
+      setDocenteACambiarEstado(null)
+      setRecarga((valor) => valor + 1)
+    } catch (error) {
+      setErrorCambiarEstado(extraerMensajeError(error))
+    } finally {
+      setCambiandoEstado(false)
     }
   }
 
@@ -156,6 +179,7 @@ export default function Docentes() {
                           <button
                             type="button"
                             aria-label={`Editar ${nombre}`}
+                            title="Editar"
                             onClick={() => navigate(`/admin/docentes/${docente.id}/editar`)}
                             className="cursor-pointer text-blue-600 hover:text-blue-700"
                           >
@@ -163,7 +187,17 @@ export default function Docentes() {
                           </button>
                           <button
                             type="button"
+                            aria-label={`${docente.activo ? 'Desactivar' : 'Activar'} ${nombre}`}
+                            title={docente.activo ? 'Desactivar' : 'Activar'}
+                            onClick={() => setDocenteACambiarEstado(docente)}
+                            className={`cursor-pointer ${docente.activo ? 'text-amber-500 hover:text-amber-600' : 'text-emerald-500 hover:text-emerald-600'}`}
+                          >
+                            {docente.activo ? <UserX size={16} /> : <UserCheck size={16} />}
+                          </button>
+                          <button
+                            type="button"
                             aria-label={`Eliminar ${nombre}`}
+                            title="Eliminar"
                             onClick={() => setDocenteAEliminar(docente)}
                             className="cursor-pointer text-red-500 hover:text-red-600"
                           >
@@ -216,24 +250,42 @@ export default function Docentes() {
       </footer>
 
       <DialogoConfirmacion
-        abierto={Boolean(docenteAEliminar)}
-        titulo="Desactivar docente"
+        abierto={Boolean(docenteACambiarEstado)}
+        titulo={docenteACambiarEstado?.activo ? 'Desactivar docente' : 'Activar docente'}
         mensaje={
-          docenteAEliminar
-            ? `¿Seguro que deseas desactivar a ${nombreCompleto(docenteAEliminar)}? Su registro se conserva, pero quedará marcado como inactivo y no podrá iniciar sesión.`
+          docenteACambiarEstado
+            ? docenteACambiarEstado.activo
+              ? `¿Seguro que deseas desactivar a ${nombreCompleto(docenteACambiarEstado)}? Su registro se conserva, pero quedará marcado como inactivo y no podrá iniciar sesión.`
+              : `¿Seguro que deseas reactivar a ${nombreCompleto(docenteACambiarEstado)}? Podrá volver a iniciar sesión en el sistema.`
             : ''
         }
-        procesando={eliminando}
-        textoConfirmar="Desactivar"
-        onConfirmar={confirmarEliminacion}
-        onCancelar={() => setDocenteAEliminar(null)}
+        error={errorCambiarEstado ?? undefined}
+        procesando={cambiandoEstado}
+        textoConfirmar={docenteACambiarEstado?.activo ? 'Desactivar' : 'Activar'}
+        onConfirmar={confirmarCambioEstado}
+        onCancelar={() => {
+          setDocenteACambiarEstado(null)
+          setErrorCambiarEstado(null)
+        }}
       />
 
-      {errorEliminar && (
-        <p className="fixed bottom-4 right-4 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600 shadow-md">
-          {errorEliminar}
-        </p>
-      )}
+      <DialogoConfirmacion
+        abierto={Boolean(docenteAEliminar)}
+        titulo="Eliminar docente"
+        mensaje={
+          docenteAEliminar
+            ? `¿Seguro que deseas eliminar permanentemente a ${nombreCompleto(docenteAEliminar)}? Esta acción no se puede deshacer. (Debe estar inactivo y no tener cargas académicas).`
+            : ''
+        }
+        error={errorEliminar ?? undefined}
+        procesando={eliminando}
+        textoConfirmar="Eliminar"
+        onConfirmar={confirmarEliminacion}
+        onCancelar={() => {
+          setDocenteAEliminar(null)
+          setErrorEliminar(null)
+        }}
+      />
     </>
   )
 }

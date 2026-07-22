@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CheckCircle2, Eye, GraduationCap, Pencil, Search, Trash2, UserPlus } from 'lucide-react'
+import { CheckCircle2, Eye, GraduationCap, Pencil, Search, Trash2, UserPlus, UserCheck, UserX } from 'lucide-react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -10,7 +10,7 @@ import { Paginacion } from '@/components/ui/Paginacion'
 import { TarjetaResumen } from '@/components/ui/TarjetaResumen'
 import { Spinner } from '@/components/ui/Spinner'
 import { DialogoConfirmacion } from '@/components/ui/DialogoConfirmacion'
-import { desactivarEstudiante, listarEstudiantes } from '@/api/estudiantes.api'
+import { activarEstudiante, desactivarEstudiante, eliminarEstudiante, listarEstudiantes } from '@/api/estudiantes.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAnioLectivo } from '@/hooks/useAnioLectivo'
 import { nombreCompleto } from '@/lib/utils'
@@ -39,6 +39,10 @@ export default function Estudiantes() {
   const [eliminando, setEliminando] = useState(false)
   const [errorEliminar, setErrorEliminar] = useState<string | null>(null)
 
+  const [estudianteACambiarEstado, setEstudianteACambiarEstado] = useState<Estudiante | null>(null)
+  const [cambiandoEstado, setCambiandoEstado] = useState(false)
+  const [errorCambiarEstado, setErrorCambiarEstado] = useState<string | null>(null)
+
   useEffect(() => {
     let vigente = true
     setError(null)
@@ -61,13 +65,32 @@ export default function Estudiantes() {
     setEliminando(true)
     setErrorEliminar(null)
     try {
-      await desactivarEstudiante(estudianteAEliminar.id)
+      await eliminarEstudiante(estudianteAEliminar.id)
       setEstudianteAEliminar(null)
       setRecarga((valor) => valor + 1)
     } catch (error) {
       setErrorEliminar(extraerMensajeError(error))
     } finally {
       setEliminando(false)
+    }
+  }
+
+  const confirmarCambioEstado = async () => {
+    if (!estudianteACambiarEstado) return
+    setCambiandoEstado(true)
+    setErrorCambiarEstado(null)
+    try {
+      if (estudianteACambiarEstado.activo) {
+        await desactivarEstudiante(estudianteACambiarEstado.id)
+      } else {
+        await activarEstudiante(estudianteACambiarEstado.id)
+      }
+      setEstudianteACambiarEstado(null)
+      setRecarga((valor) => valor + 1)
+    } catch (error) {
+      setErrorCambiarEstado(extraerMensajeError(error))
+    } finally {
+      setCambiandoEstado(false)
     }
   }
 
@@ -153,6 +176,7 @@ export default function Estudiantes() {
                           <button
                             type="button"
                             aria-label={`Ver perfil de ${nombre}`}
+                            title="Ver perfil"
                             onClick={() => navigate(`/admin/estudiantes/${estudiante.id}/perfil`)}
                             className="cursor-pointer text-slate-500 hover:text-slate-700"
                           >
@@ -161,6 +185,7 @@ export default function Estudiantes() {
                           <button
                             type="button"
                             aria-label={`Editar ${nombre}`}
+                            title="Editar"
                             onClick={() => navigate(`/admin/estudiantes/${estudiante.id}/editar`)}
                             className="cursor-pointer text-blue-600 hover:text-blue-700"
                           >
@@ -168,7 +193,17 @@ export default function Estudiantes() {
                           </button>
                           <button
                             type="button"
+                            aria-label={`${estudiante.activo ? 'Desactivar' : 'Activar'} ${nombre}`}
+                            title={estudiante.activo ? 'Desactivar' : 'Activar'}
+                            onClick={() => setEstudianteACambiarEstado(estudiante)}
+                            className={`cursor-pointer ${estudiante.activo ? 'text-amber-500 hover:text-amber-600' : 'text-emerald-500 hover:text-emerald-600'}`}
+                          >
+                            {estudiante.activo ? <UserX size={16} /> : <UserCheck size={16} />}
+                          </button>
+                          <button
+                            type="button"
                             aria-label={`Eliminar ${nombre}`}
+                            title="Eliminar"
                             onClick={() => setEstudianteAEliminar(estudiante)}
                             className="cursor-pointer text-red-500 hover:text-red-600"
                           >
@@ -221,16 +256,36 @@ export default function Estudiantes() {
       </footer>
 
       <DialogoConfirmacion
+        abierto={Boolean(estudianteACambiarEstado)}
+        titulo={estudianteACambiarEstado?.activo ? 'Desactivar estudiante' : 'Activar estudiante'}
+        mensaje={
+          estudianteACambiarEstado
+            ? estudianteACambiarEstado.activo
+              ? `¿Seguro que deseas desactivar a ${nombreCompleto(estudianteACambiarEstado)}? Su registro se conserva, pero quedará marcado como inactivo y no podrá iniciar sesión.`
+              : `¿Seguro que deseas reactivar a ${nombreCompleto(estudianteACambiarEstado)}? Podrá volver a iniciar sesión en el sistema.`
+            : ''
+        }
+        error={errorCambiarEstado ?? undefined}
+        procesando={cambiandoEstado}
+        textoConfirmar={estudianteACambiarEstado?.activo ? 'Desactivar' : 'Activar'}
+        onConfirmar={confirmarCambioEstado}
+        onCancelar={() => {
+          setEstudianteACambiarEstado(null)
+          setErrorCambiarEstado(null)
+        }}
+      />
+
+      <DialogoConfirmacion
         abierto={Boolean(estudianteAEliminar)}
-        titulo="Desactivar estudiante"
+        titulo="Eliminar estudiante"
         mensaje={
           estudianteAEliminar
-            ? `¿Seguro que deseas desactivar a ${nombreCompleto(estudianteAEliminar)}? Su registro se conserva, pero quedará marcado como inactivo y no podrá iniciar sesión.`
+            ? `¿Seguro que deseas eliminar permanentemente a ${nombreCompleto(estudianteAEliminar)}? Esta acción no se puede deshacer. (Debe estar inactivo y no tener matrículas ni notas).`
             : ''
         }
         error={errorEliminar ?? undefined}
         procesando={eliminando}
-        textoConfirmar="Desactivar"
+        textoConfirmar="Eliminar"
         onConfirmar={confirmarEliminacion}
         onCancelar={() => {
           setEstudianteAEliminar(null)
