@@ -13,6 +13,7 @@ import AdminCursos from '@/pages/admin/Cursos'
 import CursoDetalle from '@/pages/admin/CursoDetalle'
 import AdminConfiguracion from '@/pages/admin/Configuracion'
 import DocenteDashboard from '@/pages/docente/Dashboard'
+import DocentePlanilla from '@/pages/docente/Planilla'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
 import EstudianteCalificaciones from '@/pages/estudiante/Calificaciones'
 import Calendario from '@/pages/Calendario'
@@ -57,7 +58,10 @@ export const router = createBrowserRouter([
             children: [
               {
                 element: <Layout />,
-                children: [{ path: '/docente', element: <DocenteDashboard /> }],
+                children: [
+                  { path: '/docente', element: <DocenteDashboard /> },
+                  { path: '/docente/planilla', element: <DocentePlanilla /> },
+                ],
               },
             ],
           },

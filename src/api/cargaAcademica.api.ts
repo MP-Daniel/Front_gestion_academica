@@ -9,6 +9,11 @@ export async function listarCargasPorGrado(gradoId: number, anio?: number): Prom
   return api.get<CargaAcademica[]>(`/carga-academica/grado/${gradoId}`, { params: anio ? { anio } : undefined })
 }
 
+// Autoservicio: cargas académicas del docente autenticado en el año lectivo activo.
+export async function listarMisCargas(): Promise<CargaAcademica[]> {
+  return api.get<CargaAcademica[]>('/carga-academica/mis-cargas')
+}
+
 export async function reasignarDocenteCarga(id: number, datos: SolicitudReasignarDocente): Promise<CargaAcademica> {
   return api.patch<CargaAcademica>(`/carga-academica/${id}/docente`, datos)
 }
