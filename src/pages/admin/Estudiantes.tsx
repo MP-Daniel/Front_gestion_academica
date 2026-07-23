@@ -11,12 +11,14 @@ import { TarjetaResumen } from '@/components/ui/TarjetaResumen'
 import { Spinner } from '@/components/ui/Spinner'
 import { DialogoConfirmacion } from '@/components/ui/DialogoConfirmacion'
 import { activarEstudiante, desactivarEstudiante, eliminarEstudiante, listarEstudiantes } from '@/api/estudiantes.api'
+import { listarGrados } from '@/api/academico.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAnioLectivo } from '@/hooks/useAnioLectivo'
 import { nombreCompleto } from '@/lib/utils'
 import type { Estudiante } from '@/types/estudiante.types'
 import type { EstadoMatricula } from '@/types/matricula.types'
 import type { PaginaSpring } from '@/types/api.types'
+import type { Grado } from '@/types/academico.types'
 
 const TAMANO_PAGINA = 10
 
@@ -43,11 +45,37 @@ export default function Estudiantes() {
   const [cambiandoEstado, setCambiandoEstado] = useState(false)
   const [errorCambiarEstado, setErrorCambiarEstado] = useState<string | null>(null)
 
+  const [terminoBusqueda, setTerminoBusqueda] = useState('')
+  const [terminoDebounced, setTerminoDebounced] = useState('')
+  const [filtroEstado, setFiltroEstado] = useState<'TODOS' | 'ACTIVOS'>('TODOS')
+  const [filtroGrado, setFiltroGrado] = useState<number | ''>('')
+  const [grados, setGrados] = useState<Grado[]>([])
+
+  useEffect(() => {
+    listarGrados()
+      .then(setGrados)
+      .catch((error) => console.error('Error al cargar grados', error))
+  }, [])
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setTerminoDebounced(terminoBusqueda)
+      setPagina(0)
+    }, 500)
+    return () => clearTimeout(handler)
+  }, [terminoBusqueda])
+
   useEffect(() => {
     let vigente = true
     setError(null)
 
-    listarEstudiantes({ pagina, tamanoPagina: TAMANO_PAGINA })
+    listarEstudiantes({ 
+      pagina, 
+      tamanoPagina: TAMANO_PAGINA,
+      incluirInactivos: filtroEstado === 'TODOS',
+      termino: terminoDebounced || undefined,
+      gradoId: filtroGrado ? Number(filtroGrado) : undefined
+    })
       .then((datos) => {
         if (vigente) setResultado(datos)
       })
@@ -58,7 +86,7 @@ export default function Estudiantes() {
     return () => {
       vigente = false
     }
-  }, [pagina, recarga])
+  }, [pagina, recarga, terminoDebounced, filtroEstado, filtroGrado])
 
   const confirmarEliminacion = async () => {
     if (!estudianteAEliminar) return
@@ -104,15 +132,45 @@ export default function Estudiantes() {
       <Navbar titulo="Gestión de Estudiantes" />
 
       <main className="flex-1 p-8">
-        <div className="flex items-start gap-4">
-          <div className="flex-1">
-            <Input placeholder="Buscar por nombre o documento..." icon={<Search size={18} />} disabled />
-            <p className="mt-1 text-xs text-slate-400">Búsqueda en desarrollo — próximamente disponible.</p>
+        <div className="flex flex-col items-start gap-4 lg:flex-row">
+          <div className="w-full lg:flex-1">
+            <Input 
+              placeholder="Buscar por nombre o documento..." 
+              icon={<Search size={18} />} 
+              value={terminoBusqueda}
+              onChange={(e) => setTerminoBusqueda(e.target.value)}
+            />
           </div>
-          <div className="shrink-0">
-            <Button onClick={() => navigate('/admin/estudiantes/nuevo')}>
+          <div className="flex w-full shrink-0 flex-col gap-3 sm:flex-row lg:w-auto">
+            <select
+              value={filtroGrado}
+              onChange={(e) => {
+                setFiltroGrado(e.target.value ? Number(e.target.value) : '')
+                setPagina(0)
+              }}
+              className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-3 pr-8 text-sm text-slate-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 sm:w-auto"
+            >
+              <option value="">Todos los grados</option>
+              {grados.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.nombre}
+                </option>
+              ))}
+            </select>
+            <select
+              value={filtroEstado}
+              onChange={(e) => {
+                setFiltroEstado(e.target.value as 'TODOS' | 'ACTIVOS')
+                setPagina(0)
+              }}
+              className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pl-3 pr-8 text-sm text-slate-900 outline-none transition focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 sm:w-auto"
+            >
+              <option value="TODOS">Todos</option>
+              <option value="ACTIVOS">Solo Activos</option>
+            </select>
+            <Button className="w-full sm:w-auto" onClick={() => navigate('/admin/estudiantes/nuevo')}>
               <UserPlus size={18} />
-              Nuevo Estudiante
+              Nuevo
             </Button>
           </div>
         </div>
