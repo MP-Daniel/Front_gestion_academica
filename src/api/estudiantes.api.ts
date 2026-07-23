@@ -6,12 +6,16 @@ interface ParametrosListarEstudiantes {
   pagina?: number
   tamanoPagina?: number
   incluirInactivos?: boolean
+  termino?: string
+  gradoId?: number
 }
 
 export async function listarEstudiantes({
   pagina = 0,
   tamanoPagina = 10,
   incluirInactivos = true,
+  termino,
+  gradoId,
 }: ParametrosListarEstudiantes = {}): Promise<PaginaSpring<Estudiante>> {
   return api.get<PaginaSpring<Estudiante>>('/estudiantes', {
     params: {
@@ -20,6 +24,8 @@ export async function listarEstudiantes({
       sortBy: 'PRIMER_NOMBRE',
       direction: 'ASC',
       incluirInactivos,
+      ...(termino ? { termino } : {}),
+      ...(gradoId ? { gradoId } : {}),
     },
   })
 }
