@@ -15,7 +15,7 @@ export function Navbar({ titulo, subtitulo, sistemaEnLinea = true }: NavbarProps
   const { anios, anioSeleccionado, seleccionarAnio, soloLectura } = useAnioLectivo()
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-8 py-5">
+    <header className="flex h-21 items-center justify-between border-b border-slate-200 bg-white px-8 py-4">
       <div>
         <h1 className="text-xl font-bold text-slate-900">{titulo}</h1>
         {subtitulo && <p className="text-sm text-slate-500">{subtitulo}</p>}

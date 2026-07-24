@@ -23,7 +23,7 @@ export function NavbarEstudiante({
   const [haySinLeer, setHaySinLeer] = useState(true)
 
   return (
-    <header className="flex items-center justify-between gap-6 border-b border-slate-200 bg-white px-8 py-5">
+    <header className="flex h-21 items-center justify-between gap-6 border-b border-slate-200 bg-white px-8 py-5">
       <div className="flex shrink-0 items-center gap-2 text-sm">
         <span className="text-slate-400">{raiz}</span>
         <ChevronRight size={14} className="text-slate-300" />
