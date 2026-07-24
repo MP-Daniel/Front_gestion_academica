@@ -64,7 +64,7 @@ export function Sidebar() {
 
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
-      <div className="flex items-center gap-3 border-b border-slate-200 px-5 py-5">
+      <div className="flex h-21 items-center gap-3 border-b border-slate-200 px-5 py-5">
         <img src={logoIe} alt="Escudo institucional" className="h-11 w-11 object-contain" />
         <div className="leading-tight">
           <p className="text-sm font-bold text-slate-900">IE FRAY ISIDORO</p>
