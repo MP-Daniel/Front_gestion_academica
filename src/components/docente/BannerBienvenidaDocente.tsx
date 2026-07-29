@@ -4,9 +4,16 @@ import { Button } from '@/components/ui/Button'
 interface BannerBienvenidaDocenteProps {
   nombre: string
   planillasPendientes: number
+  onCalificarAhora: () => void
+  onVerCalendario: () => void
 }
 
-export function BannerBienvenidaDocente({ nombre, planillasPendientes }: BannerBienvenidaDocenteProps) {
+export function BannerBienvenidaDocente({
+  nombre,
+  planillasPendientes,
+  onCalificarAhora,
+  onVerCalendario,
+}: BannerBienvenidaDocenteProps) {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-brand-50 p-8">
       <div className="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full bg-brand-100" />
@@ -23,13 +30,13 @@ export function BannerBienvenidaDocente({ nombre, planillasPendientes }: BannerB
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <div className="w-fit">
-            <Button type="button">
+            <Button type="button" onClick={onCalificarAhora}>
               <PenLine size={18} />
               Calificar Ahora
             </Button>
           </div>
           <div className="w-fit">
-            <Button type="button" variant="secondary">
+            <Button type="button" variant="secondary" onClick={onVerCalendario}>
               <CalendarDays size={18} />
               Ver Calendario
             </Button>
