@@ -36,3 +36,17 @@ export interface ErrorFilaImportacion {
   documento: string
   mensaje: string
 }
+
+export interface FilaPreviewImportacion {
+  documento: string
+  nombreEstudiante: string
+  notaActual: number | null
+  notaNueva: number
+  actualizacion: boolean
+}
+
+export interface ResultadoPreviewImportacion {
+  filas: FilaPreviewImportacion[]
+  totalCreaciones: number
+  totalActualizaciones: number
+}
