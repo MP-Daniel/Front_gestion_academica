@@ -1,6 +1,12 @@
 import axios from 'axios'
 import { api, extraerMensajeError } from './axios'
-import type { ErrorFilaImportacion, Nota, NotaDefinitiva, ResultadoImportacionNotas } from '@/types/nota.types'
+import type {
+  ErrorFilaImportacion,
+  Nota,
+  NotaDefinitiva,
+  ResultadoImportacionNotas,
+  ResultadoPreviewImportacion,
+} from '@/types/nota.types'
 import type { Periodo } from '@/types/periodo.types'
 
 export async function obtenerNotasDefinitivas(matriculaId: number): Promise<NotaDefinitiva[]> {
@@ -38,6 +44,18 @@ export async function descargarPlantilla(cargaAcademicaId: number, periodoId: nu
     archivo: respuesta.data,
     nombreArchivo: extraerNombreArchivo(respuesta.headers['content-disposition']) ?? 'plantilla.xlsx',
   }
+}
+
+export async function previsualizarImportacion(
+  cargaAcademicaId: number,
+  periodoId: number,
+  archivo: File,
+): Promise<ResultadoPreviewImportacion> {
+  const formData = new FormData()
+  formData.append('archivo', archivo)
+  return api.post<ResultadoPreviewImportacion>('/notas/importar/previsualizar', formData, {
+    params: { cargaAcademicaId, periodoId },
+  })
 }
 
 export async function importarNotas(
