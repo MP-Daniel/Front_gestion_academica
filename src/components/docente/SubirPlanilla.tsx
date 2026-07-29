@@ -4,12 +4,18 @@ import { Button } from '@/components/ui/Button'
 interface SubirPlanillaProps {
   archivo: File | null
   onCambiarArchivo: (archivo: File | null) => void
-  onSubir: () => void
+  onPrevisualizar: () => void
   puedeSubir: boolean
-  subiendo: boolean
+  previsualizando: boolean
 }
 
-export function SubirPlanilla({ archivo, onCambiarArchivo, onSubir, puedeSubir, subiendo }: SubirPlanillaProps) {
+export function SubirPlanilla({
+  archivo,
+  onCambiarArchivo,
+  onPrevisualizar,
+  puedeSubir,
+  previsualizando,
+}: SubirPlanillaProps) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h3 className="text-lg font-bold text-slate-900">2. Subir planilla diligenciada</h3>
@@ -37,7 +43,7 @@ export function SubirPlanilla({ archivo, onCambiarArchivo, onSubir, puedeSubir, 
       </label>
 
       <div className="mt-5 w-fit">
-        <Button type="button" onClick={onSubir} disabled={!puedeSubir} isLoading={subiendo}>
+        <Button type="button" onClick={onPrevisualizar} disabled={!puedeSubir} isLoading={previsualizando}>
           Subir Planilla
         </Button>
       </div>
