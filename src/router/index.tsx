@@ -79,7 +79,7 @@ export const router = createBrowserRouter([
             ],
           },
           {
-            element: <RutaPorRol rolesPermitidos={['ADMIN', 'ESTUDIANTE']} />,
+            element: <RutaPorRol rolesPermitidos={['ADMIN', 'ESTUDIANTE', 'DOCENTE']} />,
             children: [
               {
                 element: <Layout />,

@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Spinner } from '@/components/ui/Spinner'
 import { Navbar } from '@/components/layout/Navbar'
 import { NavbarEstudiante } from '@/components/layout/NavbarEstudiante'
+import { NavbarDocente } from '@/components/layout/NavbarDocente'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { DialogoConfirmacion } from '@/components/ui/DialogoConfirmacion'
@@ -99,6 +100,8 @@ export default function Calendario() {
           titulo="Calendario Institucional"
           subtitulo="Eventos y actividades programadas por la institución"
         />
+      ) : usuario.rol === 'DOCENTE' ? (
+        <NavbarDocente usuario={usuario} seccionActual="Calendario" />
       ) : (
         <NavbarEstudiante usuario={usuario} seccionActual="Calendario" />
       )}
