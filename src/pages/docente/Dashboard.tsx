@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { obtenerDashboardDocente } from '@/api/dashboard.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
@@ -12,6 +13,7 @@ import type { DashboardDocente } from '@/types/dashboardDocente.types'
 
 export default function Dashboard() {
   const { usuario } = useAuth()
+  const navigate = useNavigate()
   const [dashboard, setDashboard] = useState<DashboardDocente | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -52,6 +54,8 @@ export default function Dashboard() {
               <BannerBienvenidaDocente
                 nombre={dashboard.docente.nombreCompleto}
                 planillasPendientes={dashboard.planillasPendientes}
+                onCalificarAhora={() => navigate('/docente/planilla')}
+                onVerCalendario={() => navigate('/calendario')}
               />
               <CargaAcademica clases={dashboard.clasesDeHoy} />
               <AlertasSeguimiento estudiantes={dashboard.estudiantesBajoRendimiento} />

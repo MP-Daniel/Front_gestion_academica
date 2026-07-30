@@ -40,6 +40,7 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
   ],
   DOCENTE: [
     { etiqueta: 'Inicio', ruta: '/docente', icono: LayoutDashboard },
+    { etiqueta: 'Calendario', ruta: '/calendario', icono: CalendarDays },
     { etiqueta: 'Planilla de Calificaciones', ruta: '/docente/planilla', icono: ClipboardList },
   ],
   ESTUDIANTE: [
