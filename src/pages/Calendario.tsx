@@ -147,8 +147,8 @@ export default function Calendario() {
                       <span className="text-xs leading-none font-semibold">{mes}</span>
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-slate-900">{evento.titulo}</p>
-                      <p className="text-sm text-slate-500">{evento.descripcion}</p>
+                      <p className="font-semibold break-words text-slate-900">{evento.titulo}</p>
+                      <p className="text-sm break-words text-slate-500">{evento.descripcion}</p>
                     </div>
                     {evento.lugar && (
                       <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-500">
