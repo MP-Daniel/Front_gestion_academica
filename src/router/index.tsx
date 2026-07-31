@@ -12,10 +12,13 @@ import AdminMaterias from '@/pages/admin/Materias'
 import AdminCursos from '@/pages/admin/Cursos'
 import CursoDetalle from '@/pages/admin/CursoDetalle'
 import AdminConfiguracion from '@/pages/admin/Configuracion'
+import AdminSoporte from '@/pages/admin/Soporte'
 import DocenteDashboard from '@/pages/docente/Dashboard'
 import DocentePlanilla from '@/pages/docente/Planilla'
+import DocenteSoporte from '@/pages/docente/Soporte'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
 import EstudianteCalificaciones from '@/pages/estudiante/Calificaciones'
+import EstudianteSoporte from '@/pages/estudiante/Soporte'
 import Calendario from '@/pages/Calendario'
 import { RutaPrivada } from './RutaPrivada'
 import { RutaPorRol } from './RutaPorRol'
@@ -49,6 +52,7 @@ export const router = createBrowserRouter([
                   { path: '/admin/cursos', element: <AdminCursos /> },
                   { path: '/admin/cursos/:id', element: <CursoDetalle /> },
                   { path: '/admin/configuracion', element: <AdminConfiguracion /> },
+                  { path: '/admin/soporte', element: <AdminSoporte /> },
                 ],
               },
             ],
@@ -61,6 +65,7 @@ export const router = createBrowserRouter([
                 children: [
                   { path: '/docente', element: <DocenteDashboard /> },
                   { path: '/docente/planilla', element: <DocentePlanilla /> },
+                  { path: '/docente/soporte', element: <DocenteSoporte /> },
                 ],
               },
             ],
@@ -74,6 +79,7 @@ export const router = createBrowserRouter([
                   { path: '/estudiante', element: <EstudianteDashboard /> },
                   { path: '/estudiante/calificaciones', element: <EstudianteCalificaciones /> },
                   { path: '/estudiante/calendario', element: <Navigate to="/calendario" replace /> },
+                  { path: '/estudiante/soporte', element: <EstudianteSoporte /> },
                 ],
               },
             ],

@@ -36,6 +36,7 @@ const NAV_POR_ROL: Record<Rol, ItemNav[]> = {
     { etiqueta: 'Cursos', ruta: '/admin/cursos', icono: BookOpen },
     { etiqueta: 'Materias', ruta: '/admin/materias', icono: BookMarked },
     { etiqueta: 'Reportes', ruta: '/admin/reportes', icono: BarChart3 },
+    { etiqueta: 'Soporte', ruta: '/admin/soporte', icono: HelpCircle },
     { etiqueta: 'Configuración', ruta: '/admin/configuracion', icono: Settings },
   ],
   DOCENTE: [
