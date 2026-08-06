@@ -20,9 +20,9 @@ export function NavbarDocente({ usuario, cargo = '', raiz = 'Portal Docente', se
   const [haySinLeer, setHaySinLeer] = useState(true)
 
   return (
-    <header className="flex items-center justify-between gap-6 border-b border-slate-200 bg-white px-8 py-5">
-      <div className="flex shrink-0 items-center gap-2 text-sm">
-        <span className="text-slate-400">{raiz}</span>
+    <header className="flex h-21 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 pl-16 py-5 sm:pr-8 lg:px-8">
+      <div className="flex min-w-0 flex-1 items-center gap-2 text-sm">
+        <span className="truncate text-slate-400">{raiz}</span>
         <ChevronRight size={14} className="text-slate-300" />
         <span className="font-semibold text-brand-700">{seccionActual}</span>
       </div>

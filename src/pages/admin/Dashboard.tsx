@@ -5,7 +5,8 @@ import { listarEventos } from '@/api/eventos.api'
 import { extraerMensajeError } from '@/api/axios'
 import { Navbar } from '@/components/layout/Navbar'
 import { StatCard } from '@/components/ui/StatCard'
-import { Spinner } from '@/components/ui/Spinner'
+import { Skeleton } from '@/components/ui/Skeleton'
+import { DashboardSkeleton } from './DashboardSkeleton'
 import { ProximosEventos } from '@/components/eventos/ProximosEventos'
 import type { DashboardAdmin } from '@/types/dashboardAdmin.types'
 import type { EventoInstitucional } from '@/types/eventos.types'
@@ -70,10 +71,7 @@ export default function Dashboard() {
         </div>
 
         {cargando ? (
-          <div className="mt-10 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-10 text-sm text-slate-500 shadow-sm">
-            <Spinner size={20} />
-            Cargando indicadores del panel...
-          </div>
+          <DashboardSkeleton />
         ) : error ? (
           <div className="mt-10 rounded-xl border border-red-200 bg-red-50 px-6 py-5 text-sm text-red-700">
             {error}
@@ -119,9 +117,24 @@ export default function Dashboard() {
             </div>
 
             {cargandoEventos ? (
-              <section className="flex min-h-80 items-center justify-center rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <Spinner />
-              </section>
+              <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-3 w-36" />
+                  <Skeleton className="h-5 w-5 rounded" />
+                </div>
+                <div className="mt-5 space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <Skeleton className="h-12 w-12 shrink-0 rounded-lg" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-4 w-3/4" />
+                        <Skeleton className="h-3 w-1/2" />
+                        <Skeleton className="h-5 w-20 rounded-full" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ) : errorEventos ? (
               <section className="flex min-h-80 items-center rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
                 {errorEventos}

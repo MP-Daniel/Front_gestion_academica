@@ -15,13 +15,13 @@ export function Navbar({ titulo, subtitulo, sistemaEnLinea = true }: NavbarProps
   const { anios, anioSeleccionado, seleccionarAnio, soloLectura } = useAnioLectivo()
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-8 py-5">
-      <div>
-        <h1 className="text-xl font-bold text-slate-900">{titulo}</h1>
-        {subtitulo && <p className="text-sm text-slate-500">{subtitulo}</p>}
+    <header className="flex h-21 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 pl-16 py-4 sm:pr-8 lg:px-8">
+      <div className="min-w-0">
+        <h1 className="truncate text-xl font-bold text-slate-900">{titulo}</h1>
+        {subtitulo && <p className="truncate text-sm text-slate-500">{subtitulo}</p>}
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-6">
         <div className="relative">
           <button
             type="button"
@@ -73,7 +73,7 @@ export function Navbar({ titulo, subtitulo, sistemaEnLinea = true }: NavbarProps
 
         <span
           className={cn(
-            'flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium',
+            'hidden items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium sm:flex',
             sistemaEnLinea ? 'bg-brand-50 text-brand-700' : 'bg-slate-100 text-slate-500',
           )}
         >
