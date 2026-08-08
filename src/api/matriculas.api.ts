@@ -16,3 +16,9 @@ export async function listarMatriculasPorGrado(gradoId: number, anio?: number): 
 export async function historialMatriculasEstudiante(documento: string): Promise<Matricula[]> {
   return api.get<Matricula[]>(`/matriculas/estudiante/${documento}`)
 }
+
+// Eliminación permanente: solo matrículas ACTIVA sin calificaciones asociadas
+// (409 MATRICULA_NO_ELIMINABLE en caso contrario).
+export async function eliminarMatricula(id: number): Promise<void> {
+  await api.delete(`/matriculas/${id}`)
+}
