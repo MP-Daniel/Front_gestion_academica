@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Award, CheckCircle2, Download, TrendingDown, TrendingUp } from 'lucide-react'
 import { obtenerCalificacionesEstudiante } from '@/api/calificaciones.api'
+import { descargarMiBoletin, extraerMensajeErrorDescargaBoletin } from '@/api/boletin.api'
 import { extraerMensajeError } from '@/api/axios'
 import { useAuth } from '@/hooks/useAuth'
 import { Spinner } from '@/components/ui/Spinner'
@@ -15,6 +16,8 @@ export default function Calificaciones() {
   const { usuario } = useAuth()
   const [calificaciones, setCalificaciones] = useState<CalificacionesEstudiante | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [descargandoBoletin, setDescargandoBoletin] = useState(false)
+  const [errorBoletin, setErrorBoletin] = useState<string | null>(null)
 
   useEffect(() => {
     let vigente = true
@@ -32,6 +35,26 @@ export default function Calificaciones() {
     }
   }, [])
 
+  const manejarDescargarBoletin = async () => {
+    setDescargandoBoletin(true)
+    setErrorBoletin(null)
+    try {
+      const { archivo, nombreArchivo } = await descargarMiBoletin()
+      const url = URL.createObjectURL(archivo)
+      const enlace = document.createElement('a')
+      enlace.href = url
+      enlace.download = nombreArchivo
+      document.body.appendChild(enlace)
+      enlace.click()
+      document.body.removeChild(enlace)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      setErrorBoletin(await extraerMensajeErrorDescargaBoletin(error))
+    } finally {
+      setDescargandoBoletin(false)
+    }
+  }
+
   if (!usuario) return null
 
   const { resumen } = calificaciones ?? {}
@@ -45,13 +68,14 @@ export default function Calificaciones() {
         raiz="Académico"
         seccionActual="Detalle de Notas"
       >
-        <div className="flex justify-end">
+        <div className="flex flex-col items-end gap-1">
           <div className="w-fit">
-            <Button type="button">
+            <Button type="button" onClick={manejarDescargarBoletin} isLoading={descargandoBoletin}>
               <Download size={16} />
               Descargar Boletín
             </Button>
           </div>
+          {errorBoletin && <p className="text-xs text-red-500">{errorBoletin}</p>}
         </div>
       </NavbarEstudiante>
 
