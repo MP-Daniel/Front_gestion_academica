@@ -61,3 +61,25 @@ export function extraerMensajeError(error: unknown): string {
 	}
 	return error instanceof Error ? error.message : "Ocurrió un error inesperado";
 }
+
+// El nombre real del archivo va en el header Content-Disposition de la respuesta de getBlob.
+export function extraerNombreArchivoDescarga(contentDisposition?: string): string | null {
+	const coincidencia = contentDisposition ? /filename="([^"]+)"/.exec(contentDisposition) : null;
+	return coincidencia?.[1] ?? null;
+}
+
+// Las descargas usan responseType "blob", así que un error de la API (ej. 404) también
+// llega como Blob en vez de JSON. extraerMensajeError no sabe leer eso, por eso esta
+// versión intenta primero decodificar el Blob como JSON.
+export async function extraerMensajeErrorDescarga(error: unknown, mensajePorDefecto: string): Promise<string> {
+	if (axios.isAxiosError(error) && error.response?.data instanceof Blob) {
+		try {
+			const texto = await error.response.data.text();
+			const cuerpo = JSON.parse(texto) as { mensaje?: string };
+			return cuerpo.mensaje ?? mensajePorDefecto;
+		} catch {
+			return mensajePorDefecto;
+		}
+	}
+	return extraerMensajeError(error);
+}
