@@ -11,7 +11,7 @@ import { listarMisCargas } from '@/api/cargaAcademica.api'
 import {
   descargarPlantilla,
   extraerErroresImportacion,
-  extraerMensajeErrorDescarga,
+  extraerMensajeErrorDescargaPlantilla,
   importarNotas,
   listarPeriodosActivos,
   obtenerNotasPorCargaYPeriodo,
@@ -103,7 +103,7 @@ export default function Planilla() {
       document.body.removeChild(enlace)
       URL.revokeObjectURL(url)
     } catch (error) {
-      setErrorDescarga(await extraerMensajeErrorDescarga(error))
+      setErrorDescarga(await extraerMensajeErrorDescargaPlantilla(error))
     } finally {
       setDescargando(false)
     }

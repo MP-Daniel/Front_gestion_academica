@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { api, extraerMensajeError } from './axios'
+import { api, extraerMensajeErrorDescarga, extraerNombreArchivoDescarga } from './axios'
 import type {
   ErrorFilaImportacion,
   Nota,
@@ -42,7 +42,7 @@ export async function descargarPlantilla(cargaAcademicaId: number, periodoId: nu
   })
   return {
     archivo: respuesta.data,
-    nombreArchivo: extraerNombreArchivo(respuesta.headers['content-disposition']) ?? 'plantilla.xlsx',
+    nombreArchivo: extraerNombreArchivoDescarga(respuesta.headers['content-disposition']) ?? 'plantilla.xlsx',
   }
 }
 
@@ -70,12 +70,6 @@ export async function importarNotas(
   })
 }
 
-function extraerNombreArchivo(contentDisposition?: string): string | null {
-  if (!contentDisposition) return null
-  const coincidencia = /filename="([^"]+)"/.exec(contentDisposition)
-  return coincidencia?.[1] ?? null
-}
-
 // El backend responde una importación inválida (422) con { errores: [...] } además del
 // mensaje general; esto extrae el detalle fila por fila para mostrarlo en una tabla.
 export function extraerErroresImportacion(error: unknown): ErrorFilaImportacion[] | null {
@@ -85,18 +79,6 @@ export function extraerErroresImportacion(error: unknown): ErrorFilaImportacion[
   return null
 }
 
-// La descarga de la plantilla usa responseType "blob", así que un error de la API
-// (ej. 404 carga no encontrada) también llega como Blob en vez de JSON. extraerMensajeError
-// no sabe leer eso, por eso esta versión intenta primero decodificar el Blob como JSON.
-export async function extraerMensajeErrorDescarga(error: unknown): Promise<string> {
-  if (axios.isAxiosError(error) && error.response?.data instanceof Blob) {
-    try {
-      const texto = await error.response.data.text()
-      const cuerpo = JSON.parse(texto) as { mensaje?: string }
-      return cuerpo.mensaje ?? 'No se pudo descargar la plantilla.'
-    } catch {
-      return 'No se pudo descargar la plantilla.'
-    }
-  }
-  return extraerMensajeError(error)
+export async function extraerMensajeErrorDescargaPlantilla(error: unknown): Promise<string> {
+  return extraerMensajeErrorDescarga(error, 'No se pudo descargar la plantilla.')
 }
