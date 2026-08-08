@@ -29,6 +29,7 @@ import { listarDocentes } from '@/api/docentes.api'
 import {
   cambiarEstadoMatricula,
   crearMatricula,
+  eliminarMatricula,
   historialMatriculasEstudiante,
   listarMatriculasPorGrado,
 } from '@/api/matriculas.api'
@@ -103,6 +104,11 @@ export default function CursoDetalle() {
     null,
   )
   const [errorHistorial, setErrorHistorial] = useState<string | null>(null)
+
+  // Matrícula: eliminar (solo ACTIVA sin calificaciones)
+  const [matriculaAEliminar, setMatriculaAEliminar] = useState<Matricula | null>(null)
+  const [eliminandoMatricula, setEliminandoMatricula] = useState(false)
+  const [errorEliminarMatricula, setErrorEliminarMatricula] = useState<string | null>(null)
 
   // Carga académica: asignar materia
   const [formCargaAbierto, setFormCargaAbierto] = useState(false)
@@ -273,6 +279,22 @@ export default function CursoDetalle() {
     historialMatriculasEstudiante(documento)
       .then((datos) => setHistorial({ documento, nombre, datos }))
       .catch((error: unknown) => setErrorHistorial(extraerMensajeError(error)))
+  }
+
+  const confirmarEliminacionMatricula = async () => {
+    if (!matriculaAEliminar) return
+
+    setEliminandoMatricula(true)
+    setErrorEliminarMatricula(null)
+    try {
+      await eliminarMatricula(matriculaAEliminar.id)
+      setMatriculaAEliminar(null)
+      setRecargaMatriculas((valor) => valor + 1)
+    } catch (error) {
+      setErrorEliminarMatricula(extraerMensajeError(error))
+    } finally {
+      setEliminandoMatricula(false)
+    }
   }
 
   const manejarCrearCarga = async (evento: FormEvent) => {
@@ -526,6 +548,25 @@ export default function CursoDetalle() {
                                   className="cursor-pointer text-blue-600 hover:text-blue-700 disabled:cursor-not-allowed disabled:text-slate-300"
                                 >
                                   <RefreshCcw size={16} />
+                                </button>
+                                <button
+                                  type="button"
+                                  aria-label={`Eliminar matrícula de ${matricula.nombreCompletoEstudiante}`}
+                                  title={
+                                    matricula.estado !== 'ACTIVA'
+                                      ? 'Solo se pueden eliminar matrículas activas sin calificaciones.'
+                                      : soloLectura
+                                        ? 'Año en modo consulta: no se puede eliminar.'
+                                        : undefined
+                                  }
+                                  disabled={matricula.estado !== 'ACTIVA' || soloLectura}
+                                  onClick={() => {
+                                    setMatriculaAEliminar(matricula)
+                                    setErrorEliminarMatricula(null)
+                                  }}
+                                  className="cursor-pointer text-red-500 hover:text-red-600 disabled:cursor-not-allowed disabled:text-slate-300"
+                                >
+                                  <Trash2 size={16} />
                                 </button>
                               </div>
                             </td>
@@ -989,6 +1030,24 @@ export default function CursoDetalle() {
           </div>
         </div>
       )}
+
+      <DialogoConfirmacion
+        abierto={Boolean(matriculaAEliminar)}
+        titulo="Eliminar matrícula"
+        mensaje={
+          matriculaAEliminar
+            ? `¿Seguro que deseas eliminar la matrícula de "${matriculaAEliminar.nombreCompletoEstudiante}"? Solo se elimina si está en estado ACTIVA y aún no tiene calificaciones registradas. Esta acción no se puede deshacer.`
+            : ''
+        }
+        error={errorEliminarMatricula ?? undefined}
+        procesando={eliminandoMatricula}
+        textoConfirmar="Eliminar"
+        onConfirmar={confirmarEliminacionMatricula}
+        onCancelar={() => {
+          setMatriculaAEliminar(null)
+          setErrorEliminarMatricula(null)
+        }}
+      />
 
       <DialogoConfirmacion
         abierto={Boolean(cargaAEliminar)}
