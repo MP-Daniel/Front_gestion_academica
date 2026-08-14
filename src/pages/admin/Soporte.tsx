@@ -137,64 +137,68 @@ export default function Soporte() {
           ) : solicitudesFiltradas.length === 0 ? (
             <p className="p-8 text-center text-sm text-slate-400">No hay solicitudes con este filtro.</p>
           ) : (
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 text-xs font-semibold tracking-wide text-slate-400 uppercase">
-                  <th className="px-6 py-3">Solicitante</th>
-                  <th className="px-6 py-3">Asunto</th>
-                  <th className="px-6 py-3">Categoría</th>
-                  <th className="px-6 py-3">Estado</th>
-                  <th className="px-6 py-3">Fecha</th>
-                  <th className="px-6 py-3 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {solicitudesFiltradas.map((solicitud) => (
-                  <tr key={solicitud.id}>
-                    <td className="px-6 py-4">
-                      <p className="font-medium text-slate-900">{solicitud.nombreSolicitante}</p>
-                      <p className="text-xs text-slate-400">
-                        {solicitud.rolSolicitante} · {solicitud.documentoSolicitante}
-                      </p>
-                    </td>
-                    <td className="max-w-xs px-6 py-4">
-                      <p className="truncate text-slate-700">{solicitud.asunto}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <Badge color={COLOR_CATEGORIA[solicitud.categoria]}>
-                        {ETIQUETA_CATEGORIA[solicitud.categoria]}
-                      </Badge>
-                    </td>
-                    <td className="px-6 py-4">
-                      <Badge color={COLOR_ESTADO[solicitud.estado]}>{ETIQUETA_ESTADO[solicitud.estado]}</Badge>
-                    </td>
-                    <td className="px-6 py-4 text-slate-500">{formatearFechaHora(solicitud.fechaCreacion)}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex justify-end gap-3">
-                        <button
-                          type="button"
-                          aria-label={`Gestionar solicitud de ${solicitud.nombreSolicitante}`}
-                          title="Gestionar"
-                          onClick={() => abrirGestion(solicitud)}
-                          className="cursor-pointer text-blue-600 hover:text-blue-700"
-                        >
-                          <Wrench size={16} />
-                        </button>
-                        <button
-                          type="button"
-                          aria-label={`Eliminar solicitud de ${solicitud.nombreSolicitante}`}
-                          title="Eliminar"
-                          onClick={() => setSolicitudAEliminar(solicitud)}
-                          className="cursor-pointer text-red-500 hover:text-red-600"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200 text-xs font-semibold tracking-wide text-slate-400 uppercase">
+                    <th className="px-6 py-3 whitespace-nowrap">Solicitante</th>
+                    <th className="px-6 py-3 whitespace-nowrap">Asunto</th>
+                    <th className="px-6 py-3 whitespace-nowrap">Categoría</th>
+                    <th className="px-6 py-3 whitespace-nowrap">Estado</th>
+                    <th className="px-6 py-3 whitespace-nowrap">Fecha</th>
+                    <th className="px-6 py-3 text-right whitespace-nowrap">Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {solicitudesFiltradas.map((solicitud) => (
+                    <tr key={solicitud.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <p className="font-medium text-slate-900">{solicitud.nombreSolicitante}</p>
+                        <p className="text-xs text-slate-400">
+                          {solicitud.rolSolicitante} · {solicitud.documentoSolicitante}
+                        </p>
+                      </td>
+                      <td className="max-w-xs px-6 py-4">
+                        <p className="truncate text-slate-700">{solicitud.asunto}</p>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Badge color={COLOR_CATEGORIA[solicitud.categoria]}>
+                          {ETIQUETA_CATEGORIA[solicitud.categoria]}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <Badge color={COLOR_ESTADO[solicitud.estado]}>{ETIQUETA_ESTADO[solicitud.estado]}</Badge>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-slate-500">
+                        {formatearFechaHora(solicitud.fechaCreacion)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex justify-end gap-3">
+                          <button
+                            type="button"
+                            aria-label={`Gestionar solicitud de ${solicitud.nombreSolicitante}`}
+                            title="Gestionar"
+                            onClick={() => abrirGestion(solicitud)}
+                            className="cursor-pointer text-blue-600 hover:text-blue-700"
+                          >
+                            <Wrench size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            aria-label={`Eliminar solicitud de ${solicitud.nombreSolicitante}`}
+                            title="Eliminar"
+                            onClick={() => setSolicitudAEliminar(solicitud)}
+                            className="cursor-pointer text-red-500 hover:text-red-600"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </main>
@@ -206,8 +210,8 @@ export default function Soporte() {
 
       {solicitudAGestionar && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-          <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-            <div className="flex items-start justify-between gap-3">
+          <div className="flex max-h-[85vh] w-full max-w-lg flex-col rounded-xl bg-white shadow-xl">
+            <div className="flex items-start justify-between gap-3 border-b border-slate-100 p-6">
               <div className="min-w-0">
                 <h2 className="text-lg font-bold break-words text-slate-900">{solicitudAGestionar.asunto}</h2>
                 <p className="mt-1 text-xs text-slate-400">
@@ -223,11 +227,15 @@ export default function Soporte() {
               </button>
             </div>
 
-            <p className="mt-4 rounded-lg bg-slate-50 p-3 text-sm break-words text-slate-600">
-              {solicitudAGestionar.descripcion}
-            </p>
+            <form
+              id="form-gestion-soporte"
+              onSubmit={guardarGestion}
+              className="flex flex-col gap-4 overflow-y-auto p-6"
+            >
+              <p className="rounded-lg bg-slate-50 p-3 text-sm break-words text-slate-600">
+                {solicitudAGestionar.descripcion}
+              </p>
 
-            <form onSubmit={guardarGestion} className="mt-4 flex flex-col gap-4">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-slate-700">Estado</label>
                 <select
@@ -262,16 +270,16 @@ export default function Soporte() {
               </div>
 
               {errorGuardar && <p className="text-sm text-red-500">{errorGuardar}</p>}
-
-              <div className="mt-2 flex justify-end gap-3">
-                <Button type="button" variant="secondary" onClick={() => setSolicitudAGestionar(null)}>
-                  Cancelar
-                </Button>
-                <Button type="submit" isLoading={guardando}>
-                  Guardar
-                </Button>
-              </div>
             </form>
+
+            <div className="flex justify-end gap-3 border-t border-slate-100 p-6">
+              <Button type="button" variant="secondary" onClick={() => setSolicitudAGestionar(null)}>
+                Cancelar
+              </Button>
+              <Button type="submit" form="form-gestion-soporte" isLoading={guardando}>
+                Guardar
+              </Button>
+            </div>
           </div>
         </div>
       )}
