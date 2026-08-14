@@ -15,6 +15,7 @@ import AdminConfiguracion from '@/pages/admin/Configuracion'
 import AdminSoporte from '@/pages/admin/Soporte'
 import DocenteDashboard from '@/pages/docente/Dashboard'
 import DocentePlanilla from '@/pages/docente/Planilla'
+import DocenteAlertasSeguimiento from '@/pages/docente/AlertasSeguimiento'
 import DocenteSoporte from '@/pages/docente/Soporte'
 import EstudianteDashboard from '@/pages/estudiante/Dashboard'
 import EstudianteCalificaciones from '@/pages/estudiante/Calificaciones'
@@ -65,6 +66,7 @@ export const router = createBrowserRouter([
                 children: [
                   { path: '/docente', element: <DocenteDashboard /> },
                   { path: '/docente/planilla', element: <DocentePlanilla /> },
+                  { path: '/docente/alertas-seguimiento', element: <DocenteAlertasSeguimiento /> },
                   { path: '/docente/soporte', element: <DocenteSoporte /> },
                 ],
               },
