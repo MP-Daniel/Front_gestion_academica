@@ -58,7 +58,10 @@ export default function Dashboard() {
                 onVerCalendario={() => navigate('/calendario')}
               />
               <CargaAcademica clases={dashboard.clasesDeHoy} />
-              <AlertasSeguimiento estudiantes={dashboard.estudiantesBajoRendimiento} />
+              <AlertasSeguimiento
+                estudiantes={dashboard.estudiantesBajoRendimiento}
+                onVerReporteCompleto={() => navigate('/docente/alertas-seguimiento')}
+              />
             </div>
 
             <div className="flex flex-col gap-6">
