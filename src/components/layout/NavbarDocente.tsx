@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { Bell, ChevronDown, ChevronRight } from 'lucide-react'
+import { Bell, ChevronRight } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
-import { cn, nombreCompleto } from '@/lib/utils'
+import { nombreCompleto } from '@/lib/utils'
 import type { Usuario } from '@/types/auth.types'
-
-const PERIODOS_MOCK = ['Periodo 1', 'Periodo 2' ]
 
 interface NavbarDocenteProps {
   usuario: Usuario
@@ -14,8 +12,6 @@ interface NavbarDocenteProps {
 }
 
 export function NavbarDocente({ usuario, cargo = '', raiz = 'Portal Docente', seccionActual }: NavbarDocenteProps) {
-  const [periodoSeleccionado, setPeriodoSeleccionado] = useState(PERIODOS_MOCK[1])
-  const [selectorAbierto, setSelectorAbierto] = useState(false)
   const [notificacionesAbiertas, setNotificacionesAbiertas] = useState(false)
   const [haySinLeer, setHaySinLeer] = useState(true)
 
@@ -28,41 +24,6 @@ export function NavbarDocente({ usuario, cargo = '', raiz = 'Portal Docente', se
       </div>
 
       <div className="flex min-w-0 items-center gap-2 sm:gap-4 lg:gap-5">
-        <div className="relative shrink-0">
-          <button
-            type="button"
-            onClick={() => setSelectorAbierto((abierto) => !abierto)}
-            className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-2 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 sm:px-3 sm:py-2"
-          >
-            {periodoSeleccionado}
-            <ChevronDown size={16} className="text-slate-400" />
-          </button>
-
-          {selectorAbierto && (
-            <>
-              <div className="fixed inset-0 z-10" onClick={() => setSelectorAbierto(false)} />
-              <div className="absolute right-0 top-full z-20 mt-1 w-40 rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
-                {PERIODOS_MOCK.map((periodo) => (
-                  <button
-                    key={periodo}
-                    type="button"
-                    onClick={() => {
-                      setPeriodoSeleccionado(periodo)
-                      setSelectorAbierto(false)
-                    }}
-                    className={cn(
-                      'block w-full cursor-pointer px-4 py-2 text-left text-sm hover:bg-slate-50',
-                      periodo === periodoSeleccionado ? 'font-semibold text-brand-700' : 'text-slate-700',
-                    )}
-                  >
-                    {periodo}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-
         <div className="relative shrink-0">
           <button
             type="button"
