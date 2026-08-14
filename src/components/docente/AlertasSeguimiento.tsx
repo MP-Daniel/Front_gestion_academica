@@ -6,9 +6,10 @@ import type { EstudianteBajoRendimiento } from '@/types/dashboardDocente.types'
 
 interface AlertasSeguimientoProps {
   estudiantes: EstudianteBajoRendimiento[]
+  onVerReporteCompleto: () => void
 }
 
-export function AlertasSeguimiento({ estudiantes }: AlertasSeguimientoProps) {
+export function AlertasSeguimiento({ estudiantes, onVerReporteCompleto }: AlertasSeguimientoProps) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-center gap-3">
@@ -41,7 +42,7 @@ export function AlertasSeguimiento({ estudiantes }: AlertasSeguimientoProps) {
       )}
 
       <div className="mt-5 w-full">
-        <Button type="button" variant="secondary">
+        <Button type="button" variant="secondary" onClick={onVerReporteCompleto}>
           Ver reporte completo
         </Button>
       </div>
