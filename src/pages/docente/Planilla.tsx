@@ -72,8 +72,27 @@ export default function Planilla() {
     setResultado(null)
     setErroresImportacion(null)
     setErrorImportacion(null)
-    setNotasGuardadas([])
   }
+
+  useEffect(() => {
+    if (cargaAcademicaId === '' || periodoId === '') {
+      setNotasGuardadas([])
+      return
+    }
+
+    let vigente = true
+    obtenerNotasPorCargaYPeriodo(cargaAcademicaId, periodoId)
+      .then((notas) => {
+        if (vigente) setNotasGuardadas(notas)
+      })
+      .catch(() => {
+        if (vigente) setNotasGuardadas([])
+      })
+
+    return () => {
+      vigente = false
+    }
+  }, [cargaAcademicaId, periodoId])
 
   const manejarCambiarCarga = (id: number | '') => {
     setCargaAcademicaId(id)
