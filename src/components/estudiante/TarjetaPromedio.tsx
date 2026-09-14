@@ -5,10 +5,10 @@ import { cn } from '@/lib/utils'
 import type { NivelPromedio } from '@/types/dashboardEstudiante.types'
 
 interface TarjetaPromedioProps {
-  valor: number
-  nivel: NivelPromedio
-  variacionPeriodoAnterior: number
-  historicoPeriodos: number[]
+  valor?: number | null
+  nivel?: NivelPromedio | null
+  variacionPeriodoAnterior?: number | null
+  historicoPeriodos?: number[] | null
 }
 
 const COLOR_POR_NIVEL: Record<NivelPromedio, BadgeColor> = {
@@ -19,13 +19,17 @@ const COLOR_POR_NIVEL: Record<NivelPromedio, BadgeColor> = {
 }
 
 export function TarjetaPromedio({
-  valor,
-  nivel,
-  variacionPeriodoAnterior,
-  historicoPeriodos,
+  valor = 0,
+  nivel = 'BAJO',
+  variacionPeriodoAnterior = 0,
+  historicoPeriodos = [],
 }: TarjetaPromedioProps) {
-  const mejorando = variacionPeriodoAnterior >= 0
-  const maximo = Math.max(...historicoPeriodos, 1)
+  const valorNum = valor ?? 0
+  const nivelSeguro: NivelPromedio = nivel ?? 'BAJO'
+  const variacionNum = variacionPeriodoAnterior ?? 0
+  const historico = historicoPeriodos ?? []
+  const mejorando = variacionNum >= 0
+  const maximo = Math.max(...historico, 1)
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -39,17 +43,17 @@ export function TarjetaPromedio({
       </div>
 
       <div className="mt-2 flex items-center gap-3">
-        <p className="text-3xl font-bold text-slate-900">{valor.toFixed(1)}</p>
-        <Badge color={COLOR_POR_NIVEL[nivel]}>{nivel}</Badge>
+        <p className="text-3xl font-bold text-slate-900">{valorNum.toFixed(1)}</p>
+        <Badge color={COLOR_POR_NIVEL[nivelSeguro]}>{nivelSeguro}</Badge>
       </div>
 
       <div className="mt-5 flex h-24 items-end gap-2">
-        {historicoPeriodos.map((punto, indice) => (
+        {historico.map((punto, indice) => (
           <div
             key={indice}
             className={cn(
               'flex-1 rounded-t-sm',
-              indice === historicoPeriodos.length - 1 ? 'bg-brand-600' : 'bg-brand-100',
+              indice === historico.length - 1 ? 'bg-brand-600' : 'bg-brand-100',
             )}
             style={{ height: `${Math.max((punto / maximo) * 100, 8)}%` }}
           />
@@ -57,7 +61,7 @@ export function TarjetaPromedio({
       </div>
       <p className="mt-2 text-xs text-slate-400">
         {mejorando ? '+' : ''}
-        {variacionPeriodoAnterior.toFixed(1)} respecto al periodo anterior
+        {variacionNum.toFixed(1)} respecto al periodo anterior
       </p>
     </div>
   )

@@ -421,7 +421,7 @@ export default function EstudiantePerfil() {
                               )
                             })}
                             <td className="px-4 py-3 text-center font-bold text-slate-900">
-                              {nota.notaDefinitiva.toFixed(2)}
+                              {nota.notaDefinitiva != null ? nota.notaDefinitiva.toFixed(2) : '—'}
                             </td>
                           </tr>
                         ))}

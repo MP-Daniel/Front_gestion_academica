@@ -14,7 +14,9 @@ interface RegistroAcademicoProps {
 }
 
 export function RegistroAcademico({ asignaturas }: RegistroAcademicoProps) {
-  const nombresPeriodos = asignaturas[0]?.notasPorPeriodo.map((p) => p.nombrePeriodo) ?? []
+  const nombresPeriodos =
+    asignaturas.find((a) => a.notasPorPeriodo && a.notasPorPeriodo.length > 0)?.notasPorPeriodo.map((p) => p.nombrePeriodo) ??
+    []
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -84,7 +86,9 @@ export function RegistroAcademico({ asignaturas }: RegistroAcademicoProps) {
                         estiloNotaFinal(asignatura.notaFinal),
                       )}
                     >
-                      {asignatura.notaFinal.toFixed(1)}
+                      {asignatura.notaFinal !== null && asignatura.notaFinal !== undefined
+                        ? asignatura.notaFinal.toFixed(1)
+                        : '—'}
                     </span>
                   </td>
                 </tr>
