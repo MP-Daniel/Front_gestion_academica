@@ -41,8 +41,9 @@ export function formatearFechaHora(fechaIso: string): string {
   return fecha.toLocaleString('es-CO', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' })
 }
 
-// Mismo umbral en toda la app: >=3.5 aprobado, >=3.0 básico, el resto bajo.
-export function estiloNotaFinal(valor: number): string {
+// Mismo umbral en toda la app: >=3.5 aprobado, >=3.0 básico, el resto bajo. Si no hay nota, estilo neutro.
+export function estiloNotaFinal(valor: number | null | undefined): string {
+  if (valor === null || valor === undefined) return 'bg-slate-50 text-slate-400 border-slate-200'
   if (valor >= 3.5) return 'bg-brand-50 text-brand-700 border-brand-200'
   if (valor >= 3.0) return 'bg-accent-100 text-accent-700 border-accent-300'
   return 'bg-red-50 text-red-600 border-red-200'

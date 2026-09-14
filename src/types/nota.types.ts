@@ -10,11 +10,11 @@ export interface NotaDefinitiva {
   nombreAsignatura: string
   cargaAcademicaId: number
   notasPorPeriodo: DetalleNotaPeriodo[]
-  notaDefinitiva: number
+  notaDefinitiva: number | null
 }
 
 export interface Nota {
-  id: number
+  id: number | null
   matriculaId: number
   documentoEstudiante: string
   nombreEstudiante: string
@@ -22,7 +22,7 @@ export interface Nota {
   nombreAsignatura: string
   periodoId: number
   nombrePeriodo: string
-  valor: number
+  valor: number | null
   habilitadaParaEdicion: boolean
 }
 

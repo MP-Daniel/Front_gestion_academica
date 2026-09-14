@@ -29,7 +29,7 @@ export interface AsignaturaCalificacion {
   nombreAsignatura: string
   nombreDocente: string
   notasPorPeriodo: NotaPeriodo[]
-  notaFinal: number
+  notaFinal: number | null
 }
 
 export interface CalificacionesEstudiante {
